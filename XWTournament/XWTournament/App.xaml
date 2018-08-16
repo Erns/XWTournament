@@ -1,8 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:XWTournament.Classes"
              x:Class="XWTournament.App">
-	<Application.Resources>
-    
-	</Application.Resources>
+    <Application.Resources>
+        <ResourceDictionary>
+            <OnPlatform x:Key="FontFamilyName_R" x:TypeArguments="x:String" Android="fa-regular-400.ttf#Font Awesome 5 Free Regular" iOS="Font Awesome 5 Free" WinPhone="Assets/fa-regular-400.ttf#Font Awesome 5 Free" />
+            <OnPlatform x:Key="FontFamilyName_S" x:TypeArguments="x:String" Android="fa-solid-900.ttf#Font Awesome 5 Free Solid" iOS="Font Awesome 5 Free" WinPhone="Assets/fa-solid-900.ttf#Font Awesome 5 Free" />
+            <OnPlatform x:Key="FontFamilyName_B" x:TypeArguments="x:String" Android="fa-brands-400.ttf#Font Awesome 5 Free Brands" iOS="Font Awesome 5 Free" WinPhone="Assets/fa-brands-400.ttf#Font Awesome 5 Free" />
+
+            <Style x:Key="fabBtnStyle" TargetType="Button">
+                <Setter Property="FontFamily" Value="{DynamicResource FontFamilyName_S}" />
+                <Setter Property="Text" Value="&#xf067;"/>
+                <Setter Property="BackgroundColor" Value="ForestGreen"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontSize" Value="Large"/>
+                <Setter Property="HeightRequest" Value="60"/>
+                <Setter Property="WidthRequest" Value="60"/>
+                <Setter Property="BorderRadius" Value="30"/>
+                <Setter Property="VerticalOptions" Value="End"/>
+                <Setter Property="HorizontalOptions" Value="End"/>
+            </Style>
+
+            <Style x:Key="lblFontAwesome_R" TargetType="Label">
+                <Setter Property="FontFamily" Value="{DynamicResource FontFamilyName_R}" />
+            </Style>
+
+            <Style x:Key="lblFontAwesome_S" TargetType="Label">
+                <Setter Property="FontFamily" Value="{DynamicResource FontFamilyName_S}" />
+            </Style>
+
+            <Style x:Key="lblFontAwesome_B" TargetType="Label">
+                <Setter Property="FontFamily" Value="{DynamicResource FontFamilyName_B}" />
+            </Style>
+
+
+            <!--<ControlTemplate x:Key="FAB_Default">
+                <Button BackgroundColor="ForestGreen"
+                    TextColor="White" 
+                    FontSize="Large"
+                    HeightRequest="60" 
+                    WidthRequest="60" 
+                    BorderRadius="30" 
+                    VerticalOptions="End" 
+                    HorizontalOptions="End">
+                    <Button.Effects>
+                        <local:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                            <local:ShadowEffect.Color>
+                                <OnPlatform x:TypeArguments="Color">
+                                    <On Platform="iOS" Value="Black" />
+                                    <On Platform="Android" Value="Black" />
+                                    <On Platform="UWP" Value="Red" />
+                                </OnPlatform>
+                            </local:ShadowEffect.Color>
+                        </local:ShadowEffect>
+                    </Button.Effects>
+                </Button>
+            </ControlTemplate>-->
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

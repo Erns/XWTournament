@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:XWTournament.Classes"
+             xmlns:Views="clr-namespace:XWTournament.Views"
+             x:Class="XWTournament.Pages.Tournaments.Tournaments_RoundInfo">
+
+    <ContentPage.Content>
+        <Grid Padding="10">
+           
+            <Views:ListView x:Name="tournamentTableListView" HasUnevenRows="True" SelectionMode="None" Scrolled="tournamentTableListView_Scrolled" ItemTapped="tournamentTableListView_ItemTapped" >
+                <Views:ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" IsEnabled="{Binding TableRowEnabled_VM}">
+                                <Grid x:Name="tournamentTableListViewInner" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="50"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Entry Grid.Row="0" Grid.Column="0" Placeholder="#1" MaxLength="3" Text="{Binding Player1Score_VM, Mode=TwoWay}" HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" Keyboard="Numeric" />
+                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding TournamentMainRoundTable.Number, StringFormat='Table {0}'}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="Small" FontAttributes="Bold" />
+                                    <Entry Grid.Row="0" Grid.Column="2" Placeholder="#2" MaxLength="3" Text="{Binding Player2Score_VM, Mode=TwoWay}" HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" Keyboard="Numeric" />
+
+                                </Grid>
+                                
+                                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                                    
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="25"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="50"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Switch Grid.Row="0" Grid.Column="0" IsToggled="{Binding Player1Winner_VM, Mode=TwoWay}" IsEnabled="{Binding ScoreTied_VM, Mode=OneWay}" />
+
+                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding TournamentMainRoundTable.Player1Name}" FontAttributes="{Binding Player1NameWinnerFont_VM, Mode=OneWay}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Start"  />
+
+                                    <Label Grid.Row="0" Grid.Column="2"  Text=" vs " HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center" />
+
+                                    <Label Grid.Row="0" Grid.Column="3" Text="{Binding TournamentMainRoundTable.Player2Name}" FontAttributes="{Binding Player2NameWinnerFont_VM, Mode=OneWay}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="End" />
+
+                                    <Switch Grid.Row="0" Grid.Column="4" IsToggled="{Binding Player2Winner_VM, Mode=TwoWay}" IsEnabled="{Binding ScoreTied_VM, Mode=OneWay}" />
+
+
+                                </Grid>
+
+                            </StackLayout>
+                            
+                        </ViewCell>
+                        
+                    </DataTemplate>
+                </Views:ListView.ItemTemplate>
+            </Views:ListView>
+
+
+            <Button x:Name="timerRoundBtn" Style="{StaticResource fabBtnStyle}" BackgroundColor="DodgerBlue" Text="&#xf017;">
+                <Button.FontFamily>
+                    <OnPlatform x:TypeArguments="x:String" Android="fa-regular-400.ttf#Font Awesome 5 Free Regular" iOS="Font Awesome 5 Free" WinPhone="Assets/fa-regular-400.ttf#Font Awesome 5 Free" />
+                </Button.FontFamily>
+                <Button.Effects>
+                    <local:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                        <local:ShadowEffect.Color>
+                            <OnPlatform x:TypeArguments="Color">
+                                <On Platform="iOS, Android, UWP" Value="Black" />
+                            </OnPlatform>
+                        </local:ShadowEffect.Color>
+                    </local:ShadowEffect>
+                </Button.Effects>
+            </Button>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

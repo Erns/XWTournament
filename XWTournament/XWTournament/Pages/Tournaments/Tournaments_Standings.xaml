@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XWTournament.Pages.Tournaments.Tournaments_Standings">
+    <ContentPage.Content>
+        <Grid Padding="10">
+            
+            <ListView x:Name="tournamentStandingsListView" HasUnevenRows="True" SelectionMode="None">
+
+
+                <ListView.Header>
+                    <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0"  Text="Rank" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Grid.Row="0" Grid.Column="1"  Text="Player" FontAttributes="Bold" />
+                            <Label Grid.Row="0" Grid.Column="2"  Text="Score" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Row="0" Grid.Column="3"  Text="MoV" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Row="0" Grid.Column="4"  Text="SoS" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+                        </Grid>
+                        <BoxView Color="Gray"  HeightRequest="1" Opacity="0.5" />
+                    </StackLayout>
+                </ListView.Header>
+                
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                                    
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="50"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Grid.Row="0" Grid.Column="0"  Text="{Binding Rank}" HorizontalOptions="Center" />
+                                    <Label Grid.Row="0" Grid.Column="1"  Text="{Binding PlayerName}" />
+                                    <Label Grid.Row="0" Grid.Column="2"  Text="{Binding Score}" HorizontalOptions="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="3"  Text="{Binding MOV}" HorizontalOptions="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="4"  Text="{Binding SOS}" HorizontalOptions="Center"/>
+                                </Grid>
+
+                            </StackLayout>
+
+                        </ViewCell>
+
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

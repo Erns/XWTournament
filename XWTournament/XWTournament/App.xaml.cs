@@ -7,26 +7,40 @@ namespace XWTournament
 {
 	public partial class App : Application
 	{
-		public App ()
-		{
-			InitializeComponent();
+        public static string DB_PATH = string.Empty;
 
-			MainPage = new MainPage();
-		}
+        public App()
+        {
+            InitializeComponent();
 
-		protected override void OnStart ()
-		{
-			// Handle when your app starts
-		}
+            MainPage = new Pages.MainMenu();
+        }
 
-		protected override void OnSleep ()
-		{
-			// Handle when your app sleeps
-		}
+        //Separate constructor that Android/iOS will use to help set the database path
+        //For Android, see Android\MainActivity.cs updated call to set pathways to the phone itself
+        public App(string DB_Path)
+        {
+            InitializeComponent();
 
-		protected override void OnResume ()
-		{
-			// Handle when your app resumes
-		}
-	}
+            DB_PATH = DB_Path;
+
+            //MainPage = new NavigationPage(new MainPage());
+            MainPage = new Pages.MainMenu();
+        }
+
+        protected override void OnStart()
+        {
+            // Handle when your app starts
+        }
+
+        protected override void OnSleep()
+        {
+            // Handle when your app sleeps
+        }
+
+        protected override void OnResume()
+        {
+            // Handle when your app resumes
+        }
+    }
 }
