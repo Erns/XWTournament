@@ -34,6 +34,18 @@
                 <Setter Property="FontFamily" Value="{DynamicResource FontFamilyName_B}" />
             </Style>
 
+            <Style x:Key="btnFontAwesome_R" TargetType="Button">
+                <Setter Property="FontFamily" Value="{DynamicResource FontFamilyName_R}" />
+            </Style>
+
+            <Style x:Key="btnFontAwesome_S" TargetType="Button">
+                <Setter Property="FontFamily" Value="{DynamicResource FontFamilyName_S}" />
+            </Style>
+
+            <Style x:Key="btnFontAwesome_B" TargetType="Button">
+                <Setter Property="FontFamily" Value="{DynamicResource FontFamilyName_B}" />
+            </Style>
+
 
             <!--<ControlTemplate x:Key="FAB_Default">
                 <Button BackgroundColor="ForestGreen"

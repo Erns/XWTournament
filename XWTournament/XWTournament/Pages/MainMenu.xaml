@@ -14,11 +14,12 @@
             <StackLayout VerticalOptions="FillAndExpand">
 
                 <Label 
-                    Text="X-Wing Tournament" 
+                    Style="{StaticResource lblFontAwesome_B}"
+                    Text="&#xf511;     X-Wing Tournament" 
                     TextColor="White" 
                     FontSize="22" 
                     VerticalOptions="Center" 
-                    HorizontalOptions="Center" 
+                    HorizontalOptions="Center"
                     Margin="0, 27, 0, 5" />
 
                 <ListView 
@@ -32,9 +33,10 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Orientation="Horizontal">
-                                    <Grid Padding="10">
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                                    <Grid Padding="10" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
                                         <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
@@ -44,14 +46,36 @@
 
                                         <Label Grid.Row="0" Grid.Column="0" Text="{Binding Icon}" Style="{StaticResource lblFontAwesome_S}" HorizontalOptions="Center" FontSize="Medium" VerticalOptions="CenterAndExpand" />
                                         <Label Grid.Row="0" Grid.Column="1" Text="{Binding Title}" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand" />
-
+                                        
+                                        <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Color="Gray"  HeightRequest="1" Opacity="0.5" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" />
                                     </Grid>
+                                    
                                 </StackLayout>
+
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
+                <StackLayout Orientation="Horizontal"
+                        VerticalOptions="End"
+                        HorizontalOptions="FillAndExpand">
+
+                    <Button 
+                        Style="{StaticResource btnFontAwesome_S}"
+                        Text="&#xf059;    Help" 
+                        FontSize="Small" 
+                        VerticalOptions="CenterAndExpand" 
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        Clicked="Button_Clicked"
+                        
+                        />
+                </StackLayout>
+                
             </StackLayout>
+
 
         </ContentPage>
     </MasterDetailPage.Master>

@@ -65,5 +65,10 @@ namespace XWTournament.Pages
                 IsPresented = false;
             }
         }
+
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            DisplayAlert("What is my purpose?", "Nothing yet", "Oh gawd");
+        }
     }
 }
