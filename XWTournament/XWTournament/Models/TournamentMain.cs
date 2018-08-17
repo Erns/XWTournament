@@ -66,8 +66,8 @@ namespace XWTournament.Models
 
         [ForeignKey(typeof(TournamentMain))]
         public int TournmentId { get; set; }
-
         public int Number { get; set; }
+        public bool Swiss { get; set; } = true;
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<TournamentMainRoundTable> Tables { get; set; } = new List<TournamentMainRoundTable>();

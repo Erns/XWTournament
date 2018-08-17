@@ -56,6 +56,7 @@ namespace XWTournament.Classes
                 player.RoundsPlayed = 0;
                 player.Score = 0;
                 player.SOS = 0;
+                player.ByeCount = 0;
 
                 //Go through each round, find their table and calculate the Margin of Victory (MOV) score
                 foreach (TournamentMainRound round in objTournMain.Rounds)
@@ -74,6 +75,10 @@ namespace XWTournament.Classes
                                 if (table.Player2Id > 0)
                                 {
                                     dctOpponents[player.Id].Add(table.Player2Id);
+                                }
+                                else if (table.Bye)
+                                {
+                                    player.ByeCount++;
                                 }
                             }
                             else
@@ -166,6 +171,7 @@ namespace XWTournament.Classes
             lstTmpPlayers = lstTmpPlayers.OrderByDescending(obj => obj.SOS).ToList();
             lstTmpPlayers = lstTmpPlayers.OrderByDescending(obj => obj.MOV).ToList();
             lstTmpPlayers = lstTmpPlayers.OrderByDescending(obj => obj.Score).ToList();
+            lstTmpPlayers = lstTmpPlayers.OrderByDescending(obj => obj.RoundsPlayed).ToList();
 
             return lstTmpPlayers;
         }

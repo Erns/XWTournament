@@ -21,6 +21,11 @@
                      Activated="startRoundBtn_ToolbarItem_Activated"
                      x:Name="startRoundBtn" />
 
+        <ToolbarItem Text="Start Top Cut"
+                     Order="Secondary"
+                     Activated="startTopCutBtn_Activated"
+                     x:Name="startTopCutBtn"/>
+
         <ToolbarItem Text="Delete Last Round"
                      Order="Secondary"
                      Activated="deleteRoundBtn_Activated"
