@@ -44,19 +44,18 @@ namespace XWTournament.Classes
             bool blnWinner = false;
 
             Dictionary<int, TournamentMainPlayer> dctPlayers = new Dictionary<int, TournamentMainPlayer>();
-            Dictionary<int, List<int>> dctOpponents = new Dictionary<int, List<int>>();
 
             //Reset and calculate each player's score
             foreach (TournamentMainPlayer player in objTournMain.Players)
             {
                 dctPlayers.Add(player.Id, new TournamentMainPlayer());
-                dctOpponents.Add(player.Id, new List<int>());
 
                 player.MOV = 0;
                 player.RoundsPlayed = 0;
                 player.Score = 0;
                 player.SOS = 0;
                 player.ByeCount = 0;
+                player.OpponentIds = new List<int>();
 
                 //Go through each round, find their table and calculate the Margin of Victory (MOV) score
                 foreach (TournamentMainRound round in objTournMain.Rounds)
@@ -74,7 +73,7 @@ namespace XWTournament.Classes
                             {
                                 if (table.Player2Id > 0)
                                 {
-                                    dctOpponents[player.Id].Add(table.Player2Id);
+                                    player.OpponentIds.Add(table.Player2Id);
                                 }
                                 else if (table.Bye)
                                 {
@@ -83,7 +82,7 @@ namespace XWTournament.Classes
                             }
                             else
                             {
-                                dctOpponents[player.Id].Add(table.Player1Id);
+                                player.OpponentIds.Add(table.Player1Id);
                             }
 
                             //Set the table's score difference and if player is the winner
@@ -131,7 +130,7 @@ namespace XWTournament.Classes
                 if (player.RoundsPlayed == 0) continue;
 
                 decimal decSoS = 0;
-                foreach (int opponentId in dctOpponents[player.Id])
+                foreach (int opponentId in player.OpponentIds)
                 {
                     TournamentMainPlayer opponent = dctPlayers[opponentId];
                     if (opponent.RoundsPlayed == 0) continue;

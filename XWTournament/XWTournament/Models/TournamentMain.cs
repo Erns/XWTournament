@@ -46,6 +46,9 @@ namespace XWTournament.Models
         [ForeignKey(typeof(Player))]
         public int PlayerId { get; set; }
 
+        [OneToMany(CascadeOperations = CascadeOperation.All)]
+        public List<int> OpponentIds { get; set; } = new List<int>();
+
         public string PlayerName { get; set; }
         public bool Active { get; set; } = true;
         public bool Bye { get; set; } = false;

@@ -103,6 +103,7 @@ namespace XWTournament.Pages.Tournaments
 
 
         #region 'Page-specific utilities'
+
         private void UpdatePlayerList(SQLite.SQLiteConnection conn)
         {
             List<Player> lstActivePlayers = conn.Query<Player>("SELECT * FROM Player WHERE Id IN (" + objTournMain.ActivePlayersList() + ")");
@@ -178,11 +179,10 @@ namespace XWTournament.Pages.Tournaments
             return true;
         }
 
-        private void SetupSwissPlayers(ref List<TournamentMainPlayer> lstActiveTournamentPlayers, ref List<TournamentMainPlayer> lstActiveTournamentPlayers_Byes)
+        private void SetupSwissPlayers(ref List<TournamentMainPlayer> lstActiveTournamentPlayers, ref List<TournamentMainPlayer> lstActiveTournamentPlayers_Byes, int intAttempts = 0)
         {
             //Grab list of currently active players in the tournament
             Dictionary<int, List<TournamentMainPlayer>> dctActiveTournamentPlayerScores = new Dictionary<int, List<TournamentMainPlayer>>();
-
 
             foreach (TournamentMainPlayer player in objTournMain.Players)
             {
@@ -260,6 +260,39 @@ namespace XWTournament.Pages.Tournaments
                             }
                             break;
                         }
+                    }
+                }
+
+                //Triple check to make sure no one is playing someone that they have already.
+                //Reshuffle as necessary, multiple times (perhaps the tournament decides to keep going for whatever reason)
+                if (intAttempts < 100)
+                {
+                    bool bFailMatchup = false;
+                    int intCount = 1;
+                    TournamentMainPlayer tmpPlayer1 = new TournamentMainPlayer();
+                    foreach (TournamentMainPlayer player in lstActiveTournamentPlayers)
+                    {
+                        //Check every even player to see if they have already been paired up with the player before them (as they will be the ones paired up to went forwarded to the round table)
+                        if (intCount % 2 == 0)
+                        {
+                           if (player.OpponentIds.Contains(tmpPlayer1.Id))
+                            {
+                                bFailMatchup = true;
+                                break;
+                            } 
+                        }
+                        else
+                        {
+                            tmpPlayer1 = player;
+                        }
+                        intCount++;
+                    }
+
+                    if (bFailMatchup)
+                    {
+                        lstActiveTournamentPlayers = new List<TournamentMainPlayer>();
+                        lstActiveTournamentPlayers_Byes = new List<TournamentMainPlayer>();
+                        SetupSwissPlayers(ref lstActiveTournamentPlayers, ref lstActiveTournamentPlayers_Byes, intAttempts++);
                     }
                 }
             }
