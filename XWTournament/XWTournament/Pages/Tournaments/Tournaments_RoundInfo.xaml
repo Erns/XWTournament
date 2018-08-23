@@ -80,6 +80,8 @@
                 </Button.Effects>
             </Button>
 
+            <ContentView x:Name="loadingOverlay" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
+
         </Grid>
     </ContentPage.Content>
 </ContentPage>

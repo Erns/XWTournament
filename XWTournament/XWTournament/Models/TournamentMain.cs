@@ -46,8 +46,9 @@ namespace XWTournament.Models
         [ForeignKey(typeof(Player))]
         public int PlayerId { get; set; }
 
-        [OneToMany(CascadeOperations = CascadeOperation.All)]
+        [TextBlob("OpponentIdsBlobbed")]
         public List<int> OpponentIds { get; set; } = new List<int>();
+        public string OpponentIdsBlobbed { get; set; }
 
         public string PlayerName { get; set; }
         public bool Active { get; set; } = true;

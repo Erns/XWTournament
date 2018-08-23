@@ -63,13 +63,13 @@ namespace XWTournament.Classes
                     foreach (TournamentMainRoundTable table in round.Tables)
                     {
 
-                        if ((table.Player1Id == player.Id || table.Player2Id == player.Id) && (table.Player1Winner || table.Player2Winner))
+                        if ((table.Player1Id == player.PlayerId || table.Player2Id == player.PlayerId) && (table.Player1Winner || table.Player2Winner))
                         {
                             player.RoundsPlayed++;
                             blnWinner = false;
 
                             //Keep track of all the opponents faced for each player
-                            if (table.Player1Id == player.Id)
+                            if (table.Player1Id == player.PlayerId)
                             {
                                 if (table.Player2Id > 0)
                                 {
@@ -89,12 +89,12 @@ namespace XWTournament.Classes
                             if (table.Player1Winner)
                             {
                                 intScoreDiff = table.Player1Score - table.Player2Score;
-                                if (player.Id == table.Player1Id) blnWinner = true;
+                                if (player.PlayerId == table.Player1Id) blnWinner = true;
                             }
                             else if (table.Player2Winner)
                             {
                                 intScoreDiff = table.Player2Score - table.Player1Score;
-                                if (player.Id == table.Player2Id) blnWinner = true;
+                                if (player.PlayerId == table.Player2Id) blnWinner = true;
                             }
 
                             //Set points if score tied for the table
@@ -120,7 +120,7 @@ namespace XWTournament.Classes
                 }
 
                 //Set player dictionary for quick access here soon
-                dctPlayers[player.Id] = player;
+                dctPlayers[player.PlayerId] = player;
             }
 
 

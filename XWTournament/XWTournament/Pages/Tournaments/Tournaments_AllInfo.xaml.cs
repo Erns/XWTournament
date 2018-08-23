@@ -29,6 +29,7 @@ namespace XWTournament.Pages.Tournaments
             InitializeComponent();
             Title = strTitle;
             intTournID = tournamentId;
+            loadingOverlay.BindingContext = this;
         }
 
         //Opening
@@ -90,7 +91,10 @@ namespace XWTournament.Pages.Tournaments
             //Add each round as tabs
             foreach (TournamentMainRound round in objTournMain.Rounds)
             {
-                Children.Add(new Tournaments_RoundInfo("Rd " + round.Number, round.Id, objTournMain.Rounds.Count));
+                Children.Add(new Tournaments_RoundInfo(this, "Rd " + round.Number, round.Id, objTournMain.Rounds.Count));
+
+                if (!round.Swiss)
+                    Children[Children.Count - 1].BackgroundColor = Color.LightGray;
             }
 
             //Remove option to delete round if there are no rounds
@@ -158,7 +162,7 @@ namespace XWTournament.Pages.Tournaments
                     objTournMain = conn.GetWithChildren<TournamentMain>(intTournID, true);
                     Utilities.CalculatePlayerScores(ref objTournMain);
 
-                    conn.Update(objTournMain); //Update any other information that was saved such as Bye counts and such
+                    conn.UpdateWithChildren(objTournMain); //Update any other information that was saved such as Bye counts and such
                 }
 
                 TournamentMainRound latestRound = objTournMain.Rounds[objTournMain.Rounds.Count - 1];
@@ -191,6 +195,7 @@ namespace XWTournament.Pages.Tournaments
                     TournamentMainPlayer roundPlayer = new TournamentMainPlayer();
                     roundPlayer.PlayerId = player.PlayerId;
                     roundPlayer.Score = player.Score;
+                    roundPlayer.OpponentIds = player.OpponentIds;
 
                     if (!player.Bye)
                         lstActiveTournamentPlayers.Add(roundPlayer);
@@ -464,12 +469,16 @@ namespace XWTournament.Pages.Tournaments
         private void startRoundBtn_ToolbarItem_Activated(object sender, EventArgs e)
         {
             bool blnSwiss = true;
+            
+            this.IsBusy = true;
 
             //Do a quick precheck of latest round info and recalculate scores
             if (StartRoundPreCheck(ref blnSwiss))
             {
                 StartRound(blnSwiss, 0);
-            }            
+            }
+            this.IsBusy = false;
+
         }
 
         //Show Standings
@@ -510,16 +519,24 @@ namespace XWTournament.Pages.Tournaments
             var topCut = await DisplayActionSheet("Top Cut", "Cancel", null, "4", "8", "16", "32");
             if (topCut != "Cancel")
             {
+                this.IsBusy = true;
+
                 bool blnSwiss = false;
                 //Do a quick precheck of latest round info and recalculate scores
                 if (StartRoundPreCheck(ref blnSwiss))
                 {
                     StartRound(false, (Convert.ToInt32(topCut)));
                 }
+                this.IsBusy = false;
+
             }
         }
+
         #endregion
 
-
+        private void startRoundBtn_Clicked(object sender, EventArgs e)
+        {
+            this.IsBusy = true;
+        }
     }
 }

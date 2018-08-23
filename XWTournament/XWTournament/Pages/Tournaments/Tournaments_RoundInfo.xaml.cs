@@ -20,11 +20,15 @@ namespace XWTournament.Pages.Tournaments
         private int intRoundId = 0;
         static double dblScrollY = 0;
 
-        public Tournaments_RoundInfo (string strTitle, int intRoundId, int intRoundCount)
+        public Tournaments_RoundInfo (Tournaments_AllInfo allInfoPage, string strTitle, int intRoundId, int intRoundCount)
 		{
 			InitializeComponent ();
             Title = strTitle;
             this.intRoundId = intRoundId;
+
+            //Tie the loading Overlay to the main page since this is what will be flagged as "IsBusy" when generating new rounds etc.
+            loadingOverlay.BindingContext = allInfoPage;
+
 
             using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
             {
