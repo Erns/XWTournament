@@ -7,6 +7,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using System.IO;
+using Plugin.LocalNotifications;
 
 namespace XWTournament.Droid
 {
@@ -20,6 +21,7 @@ namespace XWTournament.Droid
 
             base.OnCreate(bundle);
 
+            //LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.YOU_ICON_HERE
 
             string fileName = "tournaments_db.sqlite";
             string fileLocation = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);

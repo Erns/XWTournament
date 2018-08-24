@@ -10,6 +10,7 @@ using XWTournament.ViewModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XWTournament.Models;
+using Plugin.LocalNotifications;
 
 namespace XWTournament.Pages.Tournaments
 {
@@ -19,6 +20,7 @@ namespace XWTournament.Pages.Tournaments
 
         private int intRoundId = 0;
         static double dblScrollY = 0;
+        TournamentMainRoundInfoTimer_ViewModel timerRoundBtn_VM;
 
         public Tournaments_RoundInfo (Tournaments_AllInfo allInfoPage, string strTitle, int intRoundId, int intRoundCount)
 		{
@@ -28,6 +30,12 @@ namespace XWTournament.Pages.Tournaments
 
             //Tie the loading Overlay to the main page since this is what will be flagged as "IsBusy" when generating new rounds etc.
             loadingOverlay.BindingContext = allInfoPage;
+
+            timerRoundBtn_VM = new TournamentMainRoundInfoTimer_ViewModel();
+
+            timerRoundBtn.BindingContext = timerRoundBtn_VM;
+
+            //timerOptionsPicker.SetValue(int, 75); 
 
 
             using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
@@ -79,6 +87,39 @@ namespace XWTournament.Pages.Tournaments
 
             Navigation.PushAsync(new Tournaments_RoundInfoTableEdit(intRoundId, tmp.TournamentMainRoundTable.Id));
 
+        }
+
+        private void timerRoundBtn_Clicked(object sender, EventArgs e)
+        {
+            timerPopup.IsVisible = true;
+        }
+
+        private void saveTimerRoundBtn_Clicked(object sender, EventArgs e)
+        {
+            int intTime = Convert.ToInt16(timerOptionsPicker.Items[timerOptionsPicker.SelectedIndex]);
+
+            CrossLocalNotifications.Current.Cancel(102);
+            CrossLocalNotifications.Current.Show("Time's", "Up", 102, DateTime.Now.AddSeconds(intTime));
+
+            TimeSpan time = DateTime.Now.AddSeconds(intTime) - DateTime.Now;
+
+            App.MasterMainPage.RoundTimer(time, intTime, ref timerRoundBtn_VM);
+
+            timerPopup.IsVisible = false;
+        }
+
+        //Hide timer popup when hitting the back button
+        protected override bool OnBackButtonPressed()
+        {
+            if (timerPopup.IsVisible)
+            {
+                timerPopup.IsVisible = false;
+                return true;    //Prevent back button from continuing
+            }
+            else
+            {
+                return base.OnBackButtonPressed();
+            }
         }
     }
 }

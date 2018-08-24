@@ -22,6 +22,7 @@
                 <Setter Property="HorizontalOptions" Value="End"/>
             </Style>
 
+
             <Style x:Key="lblFontAwesome_R" TargetType="Label">
                 <Setter Property="FontFamily" Value="{DynamicResource FontFamilyName_R}" />
             </Style>

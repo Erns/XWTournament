@@ -32,9 +32,13 @@ namespace XWTournament.Pages.Tournaments
             loadingOverlay.BindingContext = this;
         }
 
-        //Opening
+        //Opening / OnAppearing
         protected override void OnAppearing()
         {
+            this.IsBusy = true;
+            this.BarBackgroundColor = Color.Default;
+            this.BarTextColor = Color.Default;
+
             base.OnAppearing();
 
             using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
@@ -93,18 +97,21 @@ namespace XWTournament.Pages.Tournaments
             {
                 Children.Add(new Tournaments_RoundInfo(this, "Rd " + round.Number, round.Id, objTournMain.Rounds.Count));
 
+                //Help indicate that we're no longer in "Swiss" mode
                 if (!round.Swiss)
-                    Children[Children.Count - 1].BackgroundColor = Color.LightGray;
+                {
+                    this.BarBackgroundColor = Color.LightGray;
+                    this.BarTextColor = Color.Black;
+                }
             }
 
-            //Remove option to delete round if there are no rounds
-            if (objTournMain.Rounds.Count == 0)
-            {
-                ToolbarItems.Remove(deleteRoundBtn);
-            }
+            if (objTournMain.Rounds.Count > 4)
+                mainPlayerPage.Title = "Plyrs";
+            else
+                mainPlayerPage.Title = "Players";
 
+            this.IsBusy = false;
         }
-
 
         #region 'Page-specific utilities'
 
@@ -491,12 +498,19 @@ namespace XWTournament.Pages.Tournaments
         async private void deleteRoundBtn_Activated(object sender, EventArgs e)
         {
 
+            if (objTournMain.Rounds.Count == 0)
+            {
+                await DisplayAlert("Warning!", "There are no rounds to actually delete!", "Ugh");
+                return;
+            }
+
             var confirmed = await DisplayAlert("Confirm", "Do you want to delete Round " + objTournMain.Rounds.Count + "?  This cannot be undone!", "Yes", "No");
             if (confirmed)
             {
                 using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
                 {
 
+                    this.IsBusy = true;
                     try
                     {
                         //Grab the latest round and delete it
@@ -534,9 +548,5 @@ namespace XWTournament.Pages.Tournaments
 
         #endregion
 
-        private void startRoundBtn_Clicked(object sender, EventArgs e)
-        {
-            this.IsBusy = true;
-        }
     }
 }

@@ -18,7 +18,6 @@
 
         <ToolbarItem Text="Start Next Round"
                      Order="Secondary"
-                     Clicked="startRoundBtn_Clicked"
                      Activated="startRoundBtn_ToolbarItem_Activated"
                      x:Name="startRoundBtn" />
 
@@ -34,7 +33,7 @@
         
     </TabbedPage.ToolbarItems>
 
-    <ContentPage Title="Players" >
+    <ContentPage x:Name="mainPlayerPage" Title="Players" >
         <ContentPage.Content>
             
             <Grid Padding="10">
@@ -66,68 +65,76 @@
                 <!--Add Players Popup-->
                 <ContentView x:Name="addPlayersPopup" Margin="-10" BackgroundColor="#C0808080" Padding="10, 5" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
                     <Grid>
-                        <StackLayout Padding="10" Orientation="Vertical" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center">
-                            <SearchBar x:Name="playersListView_SearchBar" Placeholder="Search player" TextChanged="SearchBar_TextChanged"></SearchBar>
-                            <ListView x:Name="playersListView" SelectionMode="None" HasUnevenRows="True" >
-                                
-                                <ListView.Header>
-                                    <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                                        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="50"/>
-                                                <ColumnDefinition Width="50"/>
-                                            </Grid.ColumnDefinitions>
+                        <Frame CornerRadius="5"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center"
+                           HasShadow="True"
+                           Padding="0">
 
-                                            <Label Grid.Row="0" Grid.Column="0"  Text="Player" FontAttributes="Bold" />
-                                            <Label Grid.Row="0" Grid.Column="1"  Text="Active" FontAttributes="Bold"  HorizontalOptions="Center"/>
-                                            <Label Grid.Row="0" Grid.Column="2"  Text="Bye" FontAttributes="Bold"  HorizontalOptions="Center"/>
-                                                
-                                        </Grid>
-                                        <BoxView Color="Gray"  HeightRequest="1" Opacity="0.5" />
-                                    </StackLayout>
-                                </ListView.Header>
-                                
-                                
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <ViewCell>
-                                            <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="{Binding RowBackgroundColor}">
-                                                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                            <StackLayout Padding="10" Orientation="Vertical" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center">
+                                <SearchBar x:Name="playersListView_SearchBar" Placeholder="Search player" TextChanged="SearchBar_TextChanged"></SearchBar>
+                                <ListView x:Name="playersListView" SelectionMode="None" HasUnevenRows="True" >
 
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="50"/>
-                                                        <ColumnDefinition Width="50"/>
-                                                    </Grid.ColumnDefinitions>
+                                    <ListView.Header>
+                                        <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                                            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="50"/>
+                                                    <ColumnDefinition Width="50"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Grid.Row="0" Grid.Column="0"  Text="Player" FontAttributes="Bold" />
+                                                <Label Grid.Row="0" Grid.Column="1"  Text="Active" FontAttributes="Bold"  HorizontalOptions="Center"/>
+                                                <Label Grid.Row="0" Grid.Column="2"  Text="Bye" FontAttributes="Bold"  HorizontalOptions="Center"/>
+
+                                            </Grid>
+                                            <BoxView Color="Gray"  HeightRequest="1" Opacity="0.5" />
+                                        </StackLayout>
+                                    </ListView.Header>
 
 
-                                                    <Label Grid.Row="0" Grid.Column="0" Text="{Binding TournamentMainPlayer.PlayerName}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Start"  />
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <ViewCell>
+                                                <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="{Binding RowBackgroundColor}">
+                                                    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
 
-                                                    <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding PlayerActive_VM, Mode=TwoWay}" HorizontalOptions="Center" />
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="50"/>
+                                                            <ColumnDefinition Width="50"/>
+                                                        </Grid.ColumnDefinitions>
 
-                                                    <Switch Grid.Row="0" Grid.Column="2" IsToggled="{Binding PlayerBye_VM, Mode=TwoWay}" HorizontalOptions="Center" />
 
-                                                </Grid>
+                                                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding TournamentMainPlayer.PlayerName}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Start"  />
 
-                                            </StackLayout>
-                                            
-                                        </ViewCell>
+                                                        <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding PlayerActive_VM, Mode=TwoWay}" HorizontalOptions="Center" />
 
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
+                                                        <Switch Grid.Row="0" Grid.Column="2" IsToggled="{Binding PlayerBye_VM, Mode=TwoWay}" HorizontalOptions="Center" />
 
-                            </ListView>
+                                                    </Grid>
 
-                            <Button Text="Close" Clicked="closePlayers" />
+                                                </StackLayout>
 
-                        </StackLayout>
+                                            </ViewCell>
+
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+
+                                </ListView>
+
+                                <Button Text="Close" Clicked="closePlayers" />
+
+                            </StackLayout>
+
+                        </Frame>
                     </Grid>
                 </ContentView>
 

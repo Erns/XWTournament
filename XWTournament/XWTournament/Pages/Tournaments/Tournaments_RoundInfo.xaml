@@ -65,7 +65,8 @@
             </Views:ListView>
 
 
-            <Button x:Name="timerRoundBtn" Style="{StaticResource fabBtnStyle}" BackgroundColor="DodgerBlue" Text="&#xf017;">
+            <!--Timer FAB-->
+            <Button x:Name="timerRoundBtn" Style="{StaticResource fabBtnStyle}" BackgroundColor="DodgerBlue" Text="{Binding TimerValue}"  Clicked="timerRoundBtn_Clicked"><!--Text="&#xf017;"-->
                 <Button.FontFamily>
                     <OnPlatform x:TypeArguments="x:String" Android="fa-regular-400.ttf#Font Awesome 5 Free Regular" iOS="Font Awesome 5 Free" WinPhone="Assets/fa-regular-400.ttf#Font Awesome 5 Free" />
                 </Button.FontFamily>
@@ -80,6 +81,46 @@
                 </Button.Effects>
             </Button>
 
+            <!--Timer Popup-->
+            <ContentView x:Name="timerPopup" Margin="-10" BackgroundColor="#C0808080" Padding="10, 5" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <Grid>
+                    <Frame CornerRadius="5"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center"
+                           HasShadow="True"
+                           Padding="0">
+                        
+                    <StackLayout Padding="10" Orientation="Vertical" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center">
+
+                        <Label Text="Set Round Timer" FontAttributes="Bold" FontSize="Medium" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+
+                        <StackLayout Orientation="Horizontal">
+
+                            <Label Text="Round Length" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" />
+                            <Picker x:Name="timerOptionsPicker" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:Int16}">
+                                        <x:Int16>5</x:Int16>
+                                        <x:Int16>30</x:Int16>
+                                        <x:Int16>60</x:Int16>
+                                        <x:Int16>75</x:Int16>
+                                        <x:Int16>120</x:Int16>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                                <Picker.SelectedItem>
+                                    <x:Int16>75</x:Int16>
+                                </Picker.SelectedItem>
+                            </Picker>
+                        </StackLayout>
+
+                        <Button Text="Save" Clicked="saveTimerRoundBtn_Clicked" VerticalOptions="CenterAndExpand" />
+
+                    </StackLayout>
+                    </Frame>
+                </Grid>
+            </ContentView>
+
+            <!--Loading please wait overlay-->
             <ContentView x:Name="loadingOverlay" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
 
         </Grid>

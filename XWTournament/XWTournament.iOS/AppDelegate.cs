@@ -5,6 +5,7 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using UserNotifications;
 
 namespace XWTournament.iOS
 {
@@ -29,6 +30,24 @@ namespace XWTournament.iOS
 
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App(full_path));
+
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+            {
+                // Ask the user for permission to get notifications on iOS 10.0+
+                UNUserNotificationCenter.Current.RequestAuthorization(
+                        UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound,
+                        (approved, error) => { });
+            }
+            else if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
+            {
+                // Ask the user for permission to get notifications on iOS 8.0+
+                var settings = UIUserNotificationSettings.GetSettingsForTypes(
+                        UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound,
+                        new NSSet());
+
+                UIApplication.SharedApplication.RegisterUserNotificationSettings(settings);
+            }
 
             return base.FinishedLaunching(app, options);
         }

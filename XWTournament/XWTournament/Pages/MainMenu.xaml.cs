@@ -7,6 +7,7 @@ using XWTournament.Classes;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XWTournament.Models;
+using XWTournament.ViewModel;
 
 namespace XWTournament.Pages
 {
@@ -15,8 +16,12 @@ namespace XWTournament.Pages
     {
         public List<MainMenuItem> MainMenuItems { get; set; }
 
+        public static int round_time = 0;
+        public static System.Timers.Timer ROUND_TIMER;
+
         public MainMenu()
         {
+
             // Set the binding context to this code behind.
             BindingContext = this;
 
@@ -69,6 +74,48 @@ namespace XWTournament.Pages
         private void Button_Clicked(object sender, EventArgs e)
         {
             DisplayAlert("What is my purpose?", "Nothing yet", "Oh gawd");
+        }
+
+        TournamentMainRoundInfoTimer_ViewModel tmpVM;
+        public void RoundTimer(TimeSpan time, int intTime, ref TournamentMainRoundInfoTimer_ViewModel timerRoundBtn_VM)
+        {
+            Device.StartTimer(time, () => { RoundOver(); return false; });
+
+
+            
+            round_time = intTime;
+            tmpVM = timerRoundBtn_VM;
+            tmpVM.TimerValue = round_time.ToString();
+
+            ROUND_TIMER = new System.Timers.Timer();
+
+            //Trigger event every second
+            ROUND_TIMER.Interval = 1000;
+            ROUND_TIMER.Elapsed += roundTimer_Tick;
+            ROUND_TIMER.Enabled = true;
+            ROUND_TIMER.Start();
+        }
+
+
+        private void roundTimer_Tick(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            round_time--;
+            tmpVM.TimerValue = round_time.ToString();
+
+            if (round_time <= 0)
+            {
+                ROUND_TIMER.Stop();
+                ROUND_TIMER.Enabled = false;
+                ROUND_TIMER = null;
+
+                tmpVM.TimerValue = "0";
+                tmpVM = null;
+            }
+        }
+
+        private void RoundOver()
+        {
+            DisplayAlert("Oy!", "Round over!", "yup");
         }
     }
 }

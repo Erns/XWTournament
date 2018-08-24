@@ -1,4 +1,6 @@
+using Plugin.LocalNotifications;
 using System;
+using System.Threading;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -8,6 +10,8 @@ namespace XWTournament
 	public partial class App : Application
 	{
         public static string DB_PATH = string.Empty;
+
+        public static Pages.MainMenu MasterMainPage;
 
         public App()
         {
@@ -24,8 +28,12 @@ namespace XWTournament
 
             DB_PATH = DB_Path;
 
-            //MainPage = new NavigationPage(new MainPage());
-            MainPage = new Pages.MainMenu();
+            //Set an accessible variable for the root main page so we can access it directly if need be (namely so round timers complete correctly)
+            MasterMainPage = new Pages.MainMenu();
+
+            MainPage = MasterMainPage;
+
+
         }
 
         protected override void OnStart()
@@ -42,5 +50,6 @@ namespace XWTournament
         {
             // Handle when your app resumes
         }
+
     }
 }

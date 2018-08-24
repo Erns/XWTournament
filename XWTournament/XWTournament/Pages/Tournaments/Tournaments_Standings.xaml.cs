@@ -31,7 +31,23 @@ namespace XWTournament.Pages.Tournaments
 
                 Utilities.CalculatePlayerScores(ref objTournMain);
 
-                tournamentStandingsListView.ItemsSource = objTournMain.Players.OrderBy(obj => obj.Rank).ToList();
+                List<TournamentMainPlayer> lstPlayerStandings = new List<TournamentMainPlayer>();
+                foreach (TournamentMainPlayer player in objTournMain.Players.OrderBy(obj => obj.Rank).ToList())
+                {
+                    //Separating out as to not tempt fate and inadvertently change any data unintentionally
+                    TournamentMainPlayer tmpPlayer = new TournamentMainPlayer();
+                    tmpPlayer.Rank = player.Rank;
+                    tmpPlayer.PlayerName = player.PlayerName;
+                    tmpPlayer.Score = player.Score;
+                    tmpPlayer.MOV = player.MOV;
+                    tmpPlayer.SOS = player.SOS;
+
+                    if (!player.Active) tmpPlayer.PlayerName += " (D)";
+
+                    lstPlayerStandings.Add(tmpPlayer);
+                }
+
+                tournamentStandingsListView.ItemsSource = lstPlayerStandings;
 
             }
         }
