@@ -36,7 +36,11 @@ namespace XWTournament.ViewModel
 
         public string TimerValue
         {
-            get { return _timerValue.ToString(); }
+            get
+            {
+                TimeSpan time = TimeSpan.FromSeconds(_timerValue);
+                return time.ToString(@"hh\:mm\:ss\:fff");
+            }
             set
             {
                 _timerValue = Convert.ToInt32(value);

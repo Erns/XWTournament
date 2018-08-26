@@ -81,8 +81,6 @@ namespace XWTournament.Pages
         {
             Device.StartTimer(time, () => { RoundOver(); return false; });
 
-
-            
             round_time = intTime;
             tmpVM = timerRoundBtn_VM;
             tmpVM.TimerValue = round_time.ToString();
