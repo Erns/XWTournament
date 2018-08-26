@@ -17,7 +17,7 @@ namespace XWTournament.Pages
         public List<MainMenuItem> MainMenuItems { get; set; }
 
         public static int round_time = 0;
-        public static System.Timers.Timer ROUND_TIMER;
+        public static System.Timers.Timer ROUND_TIMER = null;
 
         public MainMenu()
         {
@@ -77,13 +77,20 @@ namespace XWTournament.Pages
         }
 
         TournamentMainRoundInfoTimer_ViewModel tmpVM;
-        public void RoundTimer(TimeSpan time, int intTime, ref TournamentMainRoundInfoTimer_ViewModel timerRoundBtn_VM)
+        public void RoundTimer(TimeSpan time, int intTime, ref TournamentMainRoundInfoTimer_ViewModel timerRoundBtn_VM, bool blnOnLoad = false)
         {
-            Device.StartTimer(time, () => { RoundOver(); return false; });
+            if (!blnOnLoad) Device.StartTimer(time, () => { RoundOver(); return false; });
 
             round_time = intTime;
             tmpVM = timerRoundBtn_VM;
             tmpVM.TimerValue = round_time.ToString();
+
+            if (ROUND_TIMER != null)
+            {
+                ROUND_TIMER.Stop();
+                ROUND_TIMER.Enabled = false;
+                ROUND_TIMER = null;
+            }
 
             ROUND_TIMER = new System.Timers.Timer();
 

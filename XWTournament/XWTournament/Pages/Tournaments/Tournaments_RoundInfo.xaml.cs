@@ -19,6 +19,7 @@ namespace XWTournament.Pages.Tournaments
 	{
 
         private int intRoundId = 0;
+        private int intRoundNumber = 0;
         static double dblScrollY = 0;
         TournamentMainRoundInfoTimer_ViewModel timerRoundBtn_VM;
 
@@ -32,16 +33,13 @@ namespace XWTournament.Pages.Tournaments
             loadingOverlay.BindingContext = allInfoPage;
 
             timerRoundBtn_VM = new TournamentMainRoundInfoTimer_ViewModel();
-
             timerRoundBtn.BindingContext = timerRoundBtn_VM;
-
-            //timerOptionsPicker.SetValue(int, 75); 
-
 
             using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
             {
                 TournamentMainRound round = new TournamentMainRound();
                 round = conn.GetWithChildren<TournamentMainRound>(intRoundId);
+                intRoundNumber = round.Number;
 
                 bool blnEnableRows = (round.Number < intRoundCount ? false : true);
 
@@ -62,6 +60,14 @@ namespace XWTournament.Pages.Tournaments
                 else 
                 {
                     timerRoundBtn.IsVisible = true;
+
+                    //If the round time started previously, keep it going
+                    if (round.RoundTimeEnd > DateTime.Now)
+                    {
+                        TimeSpan time = round.RoundTimeEnd - DateTime.Now;
+                        App.MasterMainPage.RoundTimer(time, time.Seconds, ref timerRoundBtn_VM, true);
+                    }
+
                 }
             }
         }
@@ -89,6 +95,7 @@ namespace XWTournament.Pages.Tournaments
 
         }
 
+        #region "Buttons"               
         private void timerRoundBtn_Clicked(object sender, EventArgs e)
         {
             timerPopup.IsVisible = true;
@@ -96,18 +103,38 @@ namespace XWTournament.Pages.Tournaments
 
         private void saveTimerRoundBtn_Clicked(object sender, EventArgs e)
         {
+            this.IsBusy = true;
+
             int intTime = Convert.ToInt16(timerOptionsPicker.Items[timerOptionsPicker.SelectedIndex]);
 
+            //Set the end time for the round
+            DateTime roundTimeMid = DateTime.Now.AddSeconds(intTime / 2);
+            DateTime roundTimeEnd = DateTime.Now.AddSeconds(intTime);
+
+            //Set phone notification
+            CrossLocalNotifications.Current.Cancel(101);
+            CrossLocalNotifications.Current.Show("Round " + intRoundNumber.ToString() + " is halfway over.", "Almost there!", 101, roundTimeMid);
+
             CrossLocalNotifications.Current.Cancel(102);
-            CrossLocalNotifications.Current.Show("Time's", "Up", 102, DateTime.Now.AddSeconds(intTime));
+            CrossLocalNotifications.Current.Show("Round " + intRoundNumber.ToString() + " is over.", "Finish your round.", 102, roundTimeEnd);
 
-            TimeSpan time = DateTime.Now.AddSeconds(intTime) - DateTime.Now;
-
+            //Get the TimeSpan and set the round timer right away
+            TimeSpan time = roundTimeEnd - DateTime.Now;
             App.MasterMainPage.RoundTimer(time, intTime, ref timerRoundBtn_VM);
 
-            timerPopup.IsVisible = false;
-        }
+            //Save what the end time is at so that the timer is accurate if returning later
+            using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
+            {
+                TournamentMainRound round = new TournamentMainRound();
+                round = conn.GetWithChildren<TournamentMainRound>(intRoundId);
+                round.RoundTimeEnd = roundTimeEnd;
+                conn.Update(round);
+            }
 
+            timerPopup.IsVisible = false;
+            this.IsBusy = false;
+        }
+        
         //Hide timer popup when hitting the back button
         protected override bool OnBackButtonPressed()
         {
@@ -121,5 +148,6 @@ namespace XWTournament.Pages.Tournaments
                 return base.OnBackButtonPressed();
             }
         }
+        #endregion
     }
 }

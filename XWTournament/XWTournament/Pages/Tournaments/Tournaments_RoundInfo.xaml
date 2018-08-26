@@ -66,7 +66,7 @@
 
 
             <!--Timer FAB-->
-            <Button x:Name="timerRoundBtn" Style="{StaticResource fabBtnStyle}" BackgroundColor="DodgerBlue" Text="{Binding TimerValue}"  Clicked="timerRoundBtn_Clicked"><!--Text="&#xf017;"-->
+            <Button x:Name="timerRoundBtn" Style="{StaticResource fabBtnStyle}" BackgroundColor="DodgerBlue" Text="{Binding TimerValue, Mode=OneWay}" FontSize="{Binding TimerFontSize, Mode=OneWay}"  Clicked="timerRoundBtn_Clicked"><!--Text="&#xf017;"-->
                 <Button.FontFamily>
                     <OnPlatform x:TypeArguments="x:String" Android="fa-regular-400.ttf#Font Awesome 5 Free Regular" iOS="Font Awesome 5 Free" WinPhone="Assets/fa-regular-400.ttf#Font Awesome 5 Free" />
                 </Button.FontFamily>
