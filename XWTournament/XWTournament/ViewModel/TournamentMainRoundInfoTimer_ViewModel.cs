@@ -41,7 +41,7 @@ namespace XWTournament.ViewModel
             get
             {
                 TimeSpan time = TimeSpan.FromSeconds(_timerValue);
-                string strReturn = time.ToString(@"mm\:ss");
+                string strReturn = string.Format("{0:D2}:{1:D2}", (int)time.TotalMinutes, time.Seconds);
 
                 if (_timerValue == 0)
                 {

@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XWTournament.Models;
 using XWTournament.ViewModel;
+using System.Threading;
 
 namespace XWTournament.Pages
 {
@@ -16,8 +17,8 @@ namespace XWTournament.Pages
     {
         public List<MainMenuItem> MainMenuItems { get; set; }
 
-        public static int round_time = 0;
-        public static System.Timers.Timer ROUND_TIMER = null;
+        private static int round_time = 0;
+        private static System.Timers.Timer ROUND_TIMER = null;
 
         public MainMenu()
         {
@@ -31,13 +32,6 @@ namespace XWTournament.Pages
                 new MainMenuItem() { Title = "Players", Icon = "\uf0c0", TargetType = typeof(Players_Main) },
                 new MainMenuItem() { Title = "Tournaments", Icon = "\uf02d", TargetType = typeof(Tournaments_Main) }
             };
-
-
-             //new MainMenuItem() { Title = "Players", Icon = "menu_inbox.png", TargetType = typeof(Players_Main) },
-             //   new MainMenuItem() { Title = "Tournaments", Icon = "menu_stock.png", TargetType = typeof(Tournaments_Main) }
-
-            //new MainMenuItem() { Title = "Players", Icon = "&#xf0c0;", TargetType = typeof(Players_Main) },
-            //    new MainMenuItem() { Title = "Tournaments", Icon = "&#xf02d;", TargetType = typeof(Tournaments_Main) }
 
             // Set the default page, this is the "home" page.
             Detail = new NavigationPage(new Players_Main());
@@ -71,19 +65,16 @@ namespace XWTournament.Pages
             }
         }
 
-        private void Button_Clicked(object sender, EventArgs e)
+        TournamentMainRoundInfoTimer_ViewModel tmpVM = null;
+        public void RoundTimer(TimeSpan time, int intTime, ref TournamentMainRoundInfoTimer_ViewModel timerRoundBtn_VM)
         {
-            DisplayAlert("What is my purpose?", "Nothing yet", "Oh gawd");
-        }
-
-        TournamentMainRoundInfoTimer_ViewModel tmpVM;
-        public void RoundTimer(TimeSpan time, int intTime, ref TournamentMainRoundInfoTimer_ViewModel timerRoundBtn_VM, bool blnOnLoad = false)
-        {
-            if (!blnOnLoad) Device.StartTimer(time, () => { RoundOver(); return false; });
-
+            //Set timer to the round's end time, cancelling any existing timer and starting with the new time in mind.
             round_time = intTime;
-            tmpVM = timerRoundBtn_VM;
-            tmpVM.TimerValue = round_time.ToString();
+            if (timerRoundBtn_VM != null)
+            {
+                tmpVM = timerRoundBtn_VM;
+                tmpVM.TimerValue = round_time.ToString();
+            }
 
             if (ROUND_TIMER != null)
             {
@@ -101,11 +92,18 @@ namespace XWTournament.Pages
             ROUND_TIMER.Start();
         }
 
+        public void CancelRoundTimer()
+        {
+            round_time = 0;
+        }
+
 
         private void roundTimer_Tick(object sender, System.Timers.ElapsedEventArgs e)
         {
             round_time--;
-            tmpVM.TimerValue = round_time.ToString();
+
+            if (tmpVM != null)
+                tmpVM.TimerValue = round_time.ToString();
 
             if (round_time <= 0)
             {
@@ -113,8 +111,13 @@ namespace XWTournament.Pages
                 ROUND_TIMER.Enabled = false;
                 ROUND_TIMER = null;
 
-                tmpVM.TimerValue = "0";
-                tmpVM = null;
+                if (tmpVM != null)
+                {
+                    tmpVM.TimerValue = "0";
+                    tmpVM = null;
+                }
+
+                RoundOver();
             }
         }
 

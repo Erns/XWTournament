@@ -69,7 +69,6 @@
                         HorizontalOptions="FillAndExpand"
                         BackgroundColor="Transparent"
                         TextColor="White"
-                        Clicked="Button_Clicked"
                         
                         />
                 </StackLayout>
