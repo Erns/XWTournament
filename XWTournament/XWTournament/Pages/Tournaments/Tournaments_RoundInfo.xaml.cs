@@ -102,6 +102,21 @@ namespace XWTournament.Pages.Tournaments
 
         }
 
+        private bool isRowEven = false;
+        private void ViewCell_Appearing(object sender, EventArgs e)
+        {
+            if (this.isRowEven)
+            {
+                var viewCell = (ViewCell)sender;
+                if (viewCell.View != null)
+                {
+                    viewCell.View.BackgroundColor = Color.LightGray;
+                }
+            }
+
+            this.isRowEven = !this.isRowEven;
+        }
+
         #region "Buttons"               
         async private void timerRoundBtn_Clicked(object sender, EventArgs e)
         {
@@ -147,9 +162,9 @@ namespace XWTournament.Pages.Tournaments
 
             //Set phone notification
             CrossLocalNotifications.Current.Cancel(cintMidNotifyId);
-            CrossLocalNotifications.Current.Show("Round " + intRoundNumber.ToString() + " is halfway over.", "Almost there!", cintMidNotifyId, roundTimeMid);
-
             CrossLocalNotifications.Current.Cancel(cintEndNotifyId);
+
+            CrossLocalNotifications.Current.Show("Round " + intRoundNumber.ToString() + " is halfway over.", "Almost there!", cintMidNotifyId, roundTimeMid);
             CrossLocalNotifications.Current.Show("Round " + intRoundNumber.ToString() + " is over.", "Finish your round.", cintEndNotifyId, roundTimeEnd);
 
             //Get the TimeSpan and set the round timer right away
@@ -185,5 +200,6 @@ namespace XWTournament.Pages.Tournaments
             }
         }
         #endregion
+
     }
 }

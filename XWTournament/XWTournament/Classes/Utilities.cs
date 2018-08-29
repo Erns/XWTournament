@@ -48,7 +48,7 @@ namespace XWTournament.Classes
             //Reset and calculate each player's score
             foreach (TournamentMainPlayer player in objTournMain.Players)
             {
-                dctPlayers.Add(player.Id, new TournamentMainPlayer());
+                dctPlayers.Add(player.PlayerId, new TournamentMainPlayer());
 
                 player.MOV = 0;
                 player.RoundsPlayed = 0;
@@ -171,6 +171,7 @@ namespace XWTournament.Classes
             lstTmpPlayers = lstTmpPlayers.OrderByDescending(obj => obj.MOV).ToList();
             lstTmpPlayers = lstTmpPlayers.OrderByDescending(obj => obj.Score).ToList();
             lstTmpPlayers = lstTmpPlayers.OrderByDescending(obj => obj.RoundsPlayed).ToList();
+            lstTmpPlayers = lstTmpPlayers.OrderByDescending(obj => obj.Active).ToList();
 
             return lstTmpPlayers;
         }

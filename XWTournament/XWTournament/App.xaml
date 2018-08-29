@@ -12,7 +12,7 @@
             <Style x:Key="fabBtnStyle" TargetType="Button">
                 <Setter Property="FontFamily" Value="{DynamicResource FontFamilyName_S}" />
                 <Setter Property="Text" Value="&#xf067;"/>
-                <Setter Property="BackgroundColor" Value="ForestGreen"/>
+                <Setter Property="BackgroundColor" Value="#F9AA33"/>
                 <Setter Property="TextColor" Value="White"/>
                 <Setter Property="FontSize" Value="Large"/>
                 <Setter Property="HeightRequest" Value="60"/>

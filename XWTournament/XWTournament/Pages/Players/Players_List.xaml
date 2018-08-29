@@ -5,19 +5,23 @@
              x:Class="XWTournament.Pages.Players.Players_List">
     <ContentPage.Content>
         <Grid Padding="10">
-           
-            <ListView x:Name="playersListView">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextCell   Text="{Binding Name}"
+
+            <StackLayout Orientation="Vertical">
+                <SearchBar x:Name="playersListView_SearchBar" Placeholder="Search player" TextChanged="playersListView_SearchBar_TextChanged" FontSize="Small"></SearchBar>
+                <ListView x:Name="playersListView">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell   Text="{Binding Name}"
                                 Detail="{Binding Email}"
                                 x:Name="{Binding Id}"
                                 Tapped="OpenPlayer"
                                 CommandParameter="{Binding Id}"
                                 />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+           
 
             <Button Style="{StaticResource fabBtnStyle}" Clicked="Handle_FabClicked">
                 <Button.Effects>

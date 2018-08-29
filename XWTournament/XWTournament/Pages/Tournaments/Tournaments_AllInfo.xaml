@@ -72,7 +72,7 @@
                            Padding="0">
 
                             <StackLayout Padding="10" Orientation="Vertical" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center">
-                                <SearchBar x:Name="playersListView_SearchBar" Placeholder="Search player" TextChanged="SearchBar_TextChanged"></SearchBar>
+                                <SearchBar x:Name="playersListView_SearchBar" Placeholder="Search player" TextChanged="SearchBar_TextChanged" FontSize="Small"></SearchBar>
                                 <ListView x:Name="playersListView" SelectionMode="None" HasUnevenRows="True" >
 
                                     <ListView.Header>
@@ -99,8 +99,8 @@
 
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <ViewCell>
-                                                <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="{Binding RowBackgroundColor}">
+                                            <ViewCell Appearing="ViewCell_Appearing">
+                                                <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
                                                     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
 
                                                         <Grid.RowDefinitions>

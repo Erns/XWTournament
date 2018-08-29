@@ -51,7 +51,7 @@ namespace XWTournament.Pages.Tournaments
                 UpdatePlayerList(conn);
 
                 //Get full list of players
-                List<Player> lstPlayers = conn.Query<Player>("SELECT * FROM Player WHERE (Active = 1 AND DateDeleted IS NULL) OR Id IN (" + objTournMain.ActivePlayersList() + ")");
+                List<Player> lstPlayers = conn.Query<Player>("SELECT * FROM Player WHERE (Active = 1 AND DateDeleted IS NULL) OR Id IN (" + objTournMain.ActivePlayersList() + ") ORDER BY Name");
 
                 //Get list of currently active players in tournament
                 string[] arrActivePlayers = objTournMain.ActivePlayersList().Split(',');
@@ -59,14 +59,12 @@ namespace XWTournament.Pages.Tournaments
 
                 //Set using the ViewModel version.  This allows being able to manipulate back and forth across the class properties, while displaying as intended on the GUI
                 //while also ensuring none of the goings ons of the properties touching each other don't occur without this specific view model (such as the SQL table updates)
-                int intRow = 0;
                 lstViewPlayers = new ObservableCollection<PlayerToTournamentMainPlayer_ViewModel>();
                 TournamentMainPlayer tmpTournamentMainPlayer = null;
                 foreach (Player player in lstPlayers)
                 {
                     player.Active = false;
                     if (arrActivePlayers.Contains<string>(player.Id.ToString())) player.Active = true;
-                    intRow++;
 
                     //Set the tournament player equivalent
                     tmpTournamentMainPlayer = null;
@@ -79,7 +77,7 @@ namespace XWTournament.Pages.Tournaments
                         }
                     }
 
-                    lstViewPlayers.Add(new PlayerToTournamentMainPlayer_ViewModel(player, intTournID, intRow, tmpTournamentMainPlayer));
+                    lstViewPlayers.Add(new PlayerToTournamentMainPlayer_ViewModel(player, intTournID, tmpTournamentMainPlayer));
                 }
                 playersListView.ItemsSource = lstViewPlayers;
             }
@@ -105,10 +103,15 @@ namespace XWTournament.Pages.Tournaments
                 }
             }
 
+            //Try to shorten "players" if the tab count gets higher
             if (objTournMain.Rounds.Count > 4)
                 mainPlayerPage.Title = "Plyrs";
             else
                 mainPlayerPage.Title = "Players";
+
+            //Select the last tab
+            if (Children.Count > 0)
+                this.SelectedItem = Children[Children.Count - 1];
 
             this.IsBusy = false;
         }
@@ -117,7 +120,7 @@ namespace XWTournament.Pages.Tournaments
 
         private void UpdatePlayerList(SQLite.SQLiteConnection conn)
         {
-            List<Player> lstActivePlayers = conn.Query<Player>("SELECT * FROM Player WHERE Id IN (" + objTournMain.ActivePlayersList() + ")");
+            List<Player> lstActivePlayers = conn.Query<Player>("SELECT * FROM Player WHERE Id IN (" + objTournMain.ActivePlayersList() + ") ORDER BY Name");
             activePlayersListView.ItemsSource = lstActivePlayers;
         }
 
@@ -190,7 +193,7 @@ namespace XWTournament.Pages.Tournaments
             return true;
         }
 
-        private void SetupSwissPlayers(ref List<TournamentMainPlayer> lstActiveTournamentPlayers, ref List<TournamentMainPlayer> lstActiveTournamentPlayers_Byes, int intAttempts = 0)
+        private bool SetupSwissPlayers(ref List<TournamentMainPlayer> lstActiveTournamentPlayers, ref List<TournamentMainPlayer> lstActiveTournamentPlayers_Byes, int intAttempts = 0)
         {
             //Grab list of currently active players in the tournament
             Dictionary<int, List<TournamentMainPlayer>> dctActiveTournamentPlayerScores = new Dictionary<int, List<TournamentMainPlayer>>();
@@ -214,7 +217,6 @@ namespace XWTournament.Pages.Tournaments
                     }
                 }
             }
-
 
             if (objTournMain.Rounds.Count == 0)
             {
@@ -308,9 +310,11 @@ namespace XWTournament.Pages.Tournaments
                     }
                 }
             }
+
+            return true;
         }
 
-        private void SetupSingleEliminationPlayers(ref List<TournamentMainPlayer> lstActiveTournamentPlayers, int intTableCount)
+        private bool SetupSingleEliminationPlayers(ref List<TournamentMainPlayer> lstActiveTournamentPlayers, int intTableCount)
         {
             if (intTableCount == 0 && objTournMain.Rounds.Count > 0)
             {
@@ -320,20 +324,36 @@ namespace XWTournament.Pages.Tournaments
             //Recalculate the latest scores, grab the top number of players that qualify for the number of tables
             Utilities.CalculatePlayerScores(ref objTournMain);
             List<TournamentMainPlayer> lstTmpPlayers = new List<TournamentMainPlayer>();
+            
+            if (objTournMain.Players.Count < intTableCount)
+            {
+                DisplayAlert("Warning!", "There are not enough players for this type of cut!", "Ugh");
+                return false;
+            }
+
+            if (intTableCount == 1)
+            {
+                DisplayAlert("Warning!", "The tournament should be over at this point.", "Right?");
+                return false;
+            }
 
             lstTmpPlayers = objTournMain.Players.OrderBy(obj => obj.Rank).AsQueryable().Where(obj => obj.Rank <= (intTableCount)).ToList();
 
-            while (lstTmpPlayers.Count > 0)
+            while (lstTmpPlayers.Count > 1)
             {
                 lstActiveTournamentPlayers.Add(lstTmpPlayers[0]);
                 lstActiveTournamentPlayers.Add(lstTmpPlayers[lstTmpPlayers.Count - 1]);
                 lstTmpPlayers.RemoveAt(0);
                 lstTmpPlayers.RemoveAt(lstTmpPlayers.Count - 1);
             }
+
+            return true;
         }
 
         private void StartRound(bool blnSwiss, int intTableCount)
         {
+            bool blnProceed = false;
+
             //Create a new round
             TournamentMainRound round = new TournamentMainRound();
             round.TournmentId = intTournID;
@@ -344,9 +364,12 @@ namespace XWTournament.Pages.Tournaments
             List<TournamentMainPlayer> lstActiveTournamentPlayers_Byes = new List<TournamentMainPlayer>();
 
             if (blnSwiss)
-                SetupSwissPlayers(ref lstActiveTournamentPlayers, ref lstActiveTournamentPlayers_Byes);
+                blnProceed = SetupSwissPlayers(ref lstActiveTournamentPlayers, ref lstActiveTournamentPlayers_Byes);
             else
-                SetupSingleEliminationPlayers(ref lstActiveTournamentPlayers, intTableCount);
+                blnProceed = SetupSingleEliminationPlayers(ref lstActiveTournamentPlayers, intTableCount);
+
+
+            if (!blnProceed) return;
 
             //Create each table, pair 'em up
             TournamentMainRoundTable roundTable = new TournamentMainRoundTable();
@@ -457,10 +480,26 @@ namespace XWTournament.Pages.Tournaments
             if (string.IsNullOrWhiteSpace(e.NewTextValue))
                 playersListView.ItemsSource = lstViewPlayers;
             else
-                playersListView.ItemsSource = lstViewPlayers.Where(i => i.TournamentMainPlayer.PlayerName.Contains(e.NewTextValue));
+                playersListView.ItemsSource = lstViewPlayers.Where(i => i.TournamentMainPlayer.PlayerName.ToUpper().Contains(e.NewTextValue.ToUpper()));
 
             playersListView.EndRefresh();
 
+        }
+
+        //Update alternating row color
+        private bool isRowEven = false;
+        private void ViewCell_Appearing(object sender, EventArgs e)
+        {
+            if (this.isRowEven)
+            {
+                var viewCell = (ViewCell)sender;
+                if (viewCell.View != null)
+                {
+                    viewCell.View.BackgroundColor = Color.LightGray;
+                }
+            }
+
+            this.isRowEven = !this.isRowEven;
         }
         #endregion
 
@@ -547,6 +586,7 @@ namespace XWTournament.Pages.Tournaments
         }
 
         #endregion
+
 
     }
 }

@@ -6,7 +6,7 @@
         <ContentPage 
                 Icon="hamburger_menu.png" 
                 Title="Menu"
-                BackgroundColor="#616161">
+                BackgroundColor="#232F34">
             <!-- Menu Title background color -->
 
 

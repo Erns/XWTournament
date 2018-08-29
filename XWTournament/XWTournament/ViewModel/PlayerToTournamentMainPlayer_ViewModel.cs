@@ -33,7 +33,7 @@ namespace XWTournament.ViewModel
         }
 
         //Set the copy of the player
-        public PlayerToTournamentMainPlayer_ViewModel(Player player, int intTournamentId, int intRow, TournamentMainPlayer tournamentPlayer = null)
+        public PlayerToTournamentMainPlayer_ViewModel(Player player, int intTournamentId, TournamentMainPlayer tournamentPlayer = null)
         {
             TournamentMainPlayer = new TournamentMainPlayer();
 
@@ -48,12 +48,7 @@ namespace XWTournament.ViewModel
             {
                 TournamentMainPlayer = tournamentPlayer;
             }
-
-            if (intRow % 2 == 0) RowBackgroundColor = Color.LightGray;
-            else RowBackgroundColor = Color.Transparent;
         }
-
-        public Color RowBackgroundColor { get; set; }
 
         //Indicate Player active for next round
         public bool PlayerActive_VM

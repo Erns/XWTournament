@@ -31,8 +31,8 @@ namespace XWTournament.Pages.Tournaments
 
                 List<TournamentMain> lstTournaments = new List<TournamentMain>();
 
-                if (blnActive) lstTournaments = conn.Query<TournamentMain>("SELECT * FROM TournamentMain WHERE StartDate >= ? AND DateDeleted IS NULL", DateTime.Today);
-                else lstTournaments = conn.Query<TournamentMain>("SELECT * FROM TournamentMain WHERE StartDate < ? AND DateDeleted IS NULL", DateTime.Today);
+                if (blnActive) lstTournaments = conn.Query<TournamentMain>("SELECT * FROM TournamentMain WHERE StartDate >= ? AND DateDeleted IS NULL ORDER BY StartDate", DateTime.Today);
+                else lstTournaments = conn.Query<TournamentMain>("SELECT * FROM TournamentMain WHERE StartDate < ? AND DateDeleted IS NULL ORDER BY StartDate DESC", DateTime.Today);
 
                 tournamentListView.ItemsSource = lstTournaments;
             }

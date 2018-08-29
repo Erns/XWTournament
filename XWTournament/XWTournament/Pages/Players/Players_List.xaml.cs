@@ -14,6 +14,7 @@ namespace XWTournament.Pages.Players
 	public partial class Players_List : ContentPage
 	{
         private bool blnActive;
+        private List<Player> lstViewPlayers;
 
 		public Players_List (string strTitle, bool blnActive)
 		{
@@ -25,13 +26,14 @@ namespace XWTournament.Pages.Players
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            lstViewPlayers = new List<Player>();
 
             using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
             {
                 conn.CreateTable<Player>();
 
-                var lstPlayers = conn.Query<Player>("SELECT * FROM Player WHERE Active = ? AND DateDeleted IS NULL", blnActive);
-                playersListView.ItemsSource = lstPlayers;
+                lstViewPlayers = conn.Query<Player>("SELECT * FROM Player WHERE Active = ? AND DateDeleted IS NULL ORDER BY Name", blnActive);
+                playersListView.ItemsSource = lstViewPlayers;
             }
         }
 
@@ -45,5 +47,16 @@ namespace XWTournament.Pages.Players
             Navigation.PushAsync(new Players_AddEdit(blnActive));
         }
 
+        private void playersListView_SearchBar_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            playersListView.BeginRefresh();
+
+            if (string.IsNullOrWhiteSpace(e.NewTextValue))
+                playersListView.ItemsSource = lstViewPlayers;
+            else
+                playersListView.ItemsSource = lstViewPlayers.Where(i => i.Name.ToUpper().Contains(e.NewTextValue.ToUpper()));
+
+            playersListView.EndRefresh();
+        }
     }
 }
