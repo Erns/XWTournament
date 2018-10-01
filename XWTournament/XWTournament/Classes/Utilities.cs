@@ -14,14 +14,12 @@ namespace XWTournament.Classes
             conn.CreateTable<TournamentMain>();
             conn.CreateTable<TournamentMainPlayer>();
             conn.CreateTable<TournamentMainRound>();
-            //conn.CreateTable<TournamentMainRoundPlayer>();
             conn.CreateTable<TournamentMainRoundTable>();
 
             conn.CreateTable<Player>();
         }
 
         private static Random rng = new Random();
-
         public static void Shuffle<T>(this IList<T> list)
         {
             int n = list.Count;
@@ -39,7 +37,6 @@ namespace XWTournament.Classes
         {
 
             //All the players in the tournament should be included, regardless of being currently active in the tournament or not.
-
             int intScoreDiff = 0;
             bool blnWinner = false;
 
@@ -139,7 +136,6 @@ namespace XWTournament.Classes
 
                 decSoS /= player.RoundsPlayed;
                 player.SOS = Math.Round(decSoS, 2);
-
             }
 
 
@@ -161,7 +157,7 @@ namespace XWTournament.Classes
 
         }
 
-
+        //Sort out the list of players
         private static List<TournamentMainPlayer> GetStandings(TournamentMain objTournMain)
         {
             List<TournamentMainPlayer> lstTmpPlayers = new List<TournamentMainPlayer>();

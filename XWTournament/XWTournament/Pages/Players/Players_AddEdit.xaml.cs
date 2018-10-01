@@ -33,8 +33,6 @@ namespace XWTournament.Pages.Players
             using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
             {
                 conn.CreateTable<Player>();
-                //List<Player> player = conn.Query<Player>("SELECT * FROM Player WHERE Id = ?", Id);
-
                 openPlayer = conn.Get<Player>(Id);
 
                 nameEntry.Text = openPlayer.Name;

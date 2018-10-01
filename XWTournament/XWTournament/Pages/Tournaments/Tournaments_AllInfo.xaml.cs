@@ -19,8 +19,6 @@ namespace XWTournament.Pages.Tournaments
         private int intTournID;
 
         private TournamentMain objTournMain = new TournamentMain();
-        private List<int> lstPlayerIds = new List<int>();
-
         private ObservableCollection<PlayerToTournamentMainPlayer_ViewModel> lstViewPlayers = new ObservableCollection<PlayerToTournamentMainPlayer_ViewModel>();
 
         //New
@@ -121,7 +119,23 @@ namespace XWTournament.Pages.Tournaments
         private void UpdatePlayerList(SQLite.SQLiteConnection conn)
         {
             List<Player> lstActivePlayers = conn.Query<Player>("SELECT * FROM Player WHERE Id IN (" + objTournMain.ActivePlayersList() + ") ORDER BY Name");
-            activePlayersListView.ItemsSource = lstActivePlayers;
+
+            List<Player> lstPlayerCol1 = new List<Player>();
+            List<Player> lstPlayerCol2 = new List<Player>();
+
+            bool evenPlyr = false;
+            foreach (Player player in lstActivePlayers)
+            {
+                if (!evenPlyr)
+                    lstPlayerCol1.Add(player);
+                else
+                    lstPlayerCol2.Add(player);
+
+                evenPlyr = !evenPlyr;
+            }
+
+            activePlayersListView_Col1.ItemsSource = lstPlayerCol1;
+            activePlayersListView_Col2.ItemsSource = lstPlayerCol2;
         }
 
         private void setRoundTableNames(ref TournamentMainRoundTable roundTable)
@@ -368,7 +382,7 @@ namespace XWTournament.Pages.Tournaments
             else
                 blnProceed = SetupSingleEliminationPlayers(ref lstActiveTournamentPlayers, intTableCount);
 
-
+            //If players weren't able to be successfully setup correctly, don't create a new round
             if (!blnProceed) return;
 
             //Create each table, pair 'em up
@@ -428,6 +442,10 @@ namespace XWTournament.Pages.Tournaments
                 try
                 {
                     conn.Update(objTournMain); //Update any other information that was saved such as Bye counts and such
+                    foreach(TournamentMainPlayer player in objTournMain.Players)
+                    {
+                        conn.Update(player);  //Player info can change due to flagging/unflagging a player Bye
+                    }
                     conn.InsertWithChildren(round, true);
                 }
                 catch (Exception ex)
@@ -586,7 +604,6 @@ namespace XWTournament.Pages.Tournaments
         }
 
         #endregion
-
 
     }
 }

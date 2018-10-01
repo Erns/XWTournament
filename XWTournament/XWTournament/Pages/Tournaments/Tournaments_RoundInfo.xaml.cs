@@ -79,6 +79,8 @@ namespace XWTournament.Pages.Tournaments
             }
         }
 
+        #region "ListView Utilities"
+
         //Show/Hide button when scrolling up/down
         private void tournamentTableListView_Scrolled(object sender, ScrolledEventArgs e)
         {
@@ -116,6 +118,8 @@ namespace XWTournament.Pages.Tournaments
 
             this.isRowEven = !this.isRowEven;
         }
+
+        #endregion
 
         #region "Buttons"               
         async private void timerRoundBtn_Clicked(object sender, EventArgs e)

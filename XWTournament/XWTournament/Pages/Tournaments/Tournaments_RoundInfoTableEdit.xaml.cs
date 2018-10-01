@@ -32,6 +32,7 @@ namespace XWTournament.Pages.Tournaments
 
                 lstPlayers = new List<clsPlayerInfo>();
 
+                //Set the local player information to help track player ids and respective table ids
                 foreach(TournamentMainRoundTable table in currentRound.Tables)
                 {
                     if (table.Player1Id > 0)
@@ -82,21 +83,9 @@ namespace XWTournament.Pages.Tournaments
             }
         }
 
-        private class clsPlayerInfo
-        {
-            public int PlayerId { get; set; }
-            public string PlayerName { get; set; }
-            public int TableId { get; set; }
+        #region "Update Player picker lists"
 
-            public clsPlayerInfo(int Id, string Name, int TableId)
-            {
-                this.PlayerId = Id;
-                this.PlayerName = Name;
-                this.TableId = TableId;
-            }
-
-        }
-
+        //Update the other picker list of players depending on what's currently selected
         private void pckPlayer1_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdatePlayerPickers(sender, 2);
@@ -147,11 +136,14 @@ namespace XWTournament.Pages.Tournaments
                 pckPlayer.SelectedIndexChanged += pckPlayer2_SelectedIndexChanged;
         }
 
+        #endregion
+
+        #region "Button"
+
         private void saveButton_Clicked(object sender, EventArgs e)
         {
             clsPlayerInfo player1 = (clsPlayerInfo)pckPlayer1.SelectedItem;
             clsPlayerInfo player2 = (clsPlayerInfo)pckPlayer2.SelectedItem;
-
 
             using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
             {
@@ -160,6 +152,7 @@ namespace XWTournament.Pages.Tournaments
                 clsPlayerInfo tmpPlayer;
                 int tmpPlayerId;
 
+                //Go through each Picker set of players
                 for (int i = 1; i <= 2; i++)
                 {
                     if (i == 1)
@@ -167,13 +160,13 @@ namespace XWTournament.Pages.Tournaments
                         tmpPlayer = player1;
                         tmpPlayerId = intPlayer1Id;
                     }
-
                     else
                     {
                         tmpPlayer = player2;
                         tmpPlayerId = intPlayer2Id;
                     }
 
+                    //If the currently selected player is not the same player that was loaded, proceed
                     if (tmpPlayer.PlayerId != tmpPlayerId)
                     {
                         tmpOtherTable = new TournamentMainRoundTable();
@@ -181,8 +174,10 @@ namespace XWTournament.Pages.Tournaments
 
                         TournamentMainRoundTable otherTable = conn.Get<TournamentMainRoundTable>(tmpPlayer.TableId);
 
+                        //Ensure we're not swamping player spots within the same table.  If so, can create issues with this logic that there's really no need to code for at this point.
                         if (otherTable.Id != currentTable.Id)
                         {
+                            //Set local temp object properties instead of copying the objects themselves, preventing inadvertently changing table data unintentionally
                             tmpOtherTable.Player1Id = otherTable.Player1Id;
                             tmpOtherTable.Player1Name = otherTable.Player1Name;
                             tmpOtherTable.Player2Id = otherTable.Player2Id;
@@ -193,11 +188,11 @@ namespace XWTournament.Pages.Tournaments
                             tmpCurrentTable.Player2Id = currentTable.Player2Id;
                             tmpCurrentTable.Player2Name = currentTable.Player2Name;
 
+                            //Find player being swapped with on the other tableId, determine if player 1 or 2, keeping in mind if the current table's player is player 1 or 2 already 
+                            //(that way we can swap a player 1 from one table to a player 2 on another table)
                             if (tmpOtherTable.Player1Id == tmpPlayer.PlayerId)
                             {
-                                //otherTable.Player1Id = tmpCurrentTable.Player1Id;
-                                //otherTable.Player1Name = tmpCurrentTable.Player1Name;
-                                //otherTable.TableName = string.Format("{0} vs {1}", otherTable.Player1Name, otherTable.Player2Name);
+
                                 if (i == 1)
                                 {
                                     currentTable.Player1Id = tmpOtherTable.Player1Id;
@@ -215,9 +210,6 @@ namespace XWTournament.Pages.Tournaments
                             }
                             else if (tmpOtherTable.Player2Id == tmpPlayer.PlayerId)
                             {
-                                //otherTable.Player2Id = tmpCurrentTable.Player2Id;
-                                //otherTable.Player2Name = tmpCurrentTable.Player2Name;
-                                //otherTable.TableName = string.Format("{0} vs {1}", otherTable.Player1Name, otherTable.Player2Name);
 
                                 if (i == 1)
                                 {
@@ -235,119 +227,40 @@ namespace XWTournament.Pages.Tournaments
                                 }
                             }
 
+                            //Reset the tables' names
                             currentTable.TableName = string.Format("{0} vs {1}", currentTable.Player1Name, currentTable.Player2Name);
                             otherTable.TableName = string.Format("{0} vs {1}", otherTable.Player1Name, otherTable.Player2Name);
                         }
 
-                        
-
-
-
-                        //if (tmpCurrentTable.Player1Id == tmpPlayer.PlayerId)
-                        //{
-                        //    if (i == 1)
-                        //    {
-                        //        otherTable.Player1Id = tmpCurrentTable.Player1Id;
-                        //        otherTable.Player1Name = tmpCurrentTable.Player1Name;
-                        //    }
-                        //    else
-                        //    {
-                        //        otherTable.Player2Id = tmpCurrentTable.Player1Id;
-                        //        otherTable.Player2Name = tmpCurrentTable.Player1Name;
-                        //    }
-
-
-                        //    //currentTable.Player1Id = tmpOtherTable.Player1Id;
-                        //    //currentTable.Player1Name = tmpOtherTable.Player1Name;
-                        //    //currentTable.TableName = string.Format("{0} vs {1}", currentTable.Player1Name, currentTable.Player2Name);
-                        //}
-                        //else if (tmpCurrentTable.Player2Id == tmpPlayer.PlayerId)
-                        //{
-                        //    if (i == 1)
-                        //    {
-                        //        otherTable.Player1Id = tmpCurrentTable.Player2Id;
-                        //        otherTable.Player1Name = tmpCurrentTable.Player2Name;
-                        //    }
-                        //    else
-                        //    {
-                        //        otherTable.Player2Id = tmpCurrentTable.Player2Id;
-                        //        otherTable.Player2Name = tmpCurrentTable.Player2Name;
-                        //    }
-                        //    //currentTable.Player2Id = tmpOtherTable.Player2Id;
-                        //    //currentTable.Player2Name = tmpOtherTable.Player2Name;
-                        //    //currentTable.TableName = string.Format("{0} vs {1}", currentTable.Player1Name, currentTable.Player2Name);
-                        //}
-                        //otherTable.TableName = string.Format("{0} vs {1}", otherTable.Player1Name, otherTable.Player2Name);
-
-
+                        //Update the tables' information on the database
                         conn.Update(otherTable);
                         conn.Update(currentTable);
                     }
                 }
-
-                //if (player1.PlayerId != intPlayer1Id)
-                //{
-                //    tmpTable = new TournamentMainRoundTable();
-
-                //    TournamentMainRoundTable otherTable = conn.Get<TournamentMainRoundTable>(player1.TableId);
-
-                //    tmpTable = otherTable;
-
-                //    if (otherTable.Player1Id == player1.PlayerId)
-                //    {
-                //        otherTable.Player1Id = currentTable.Player1Id;
-                //        otherTable.Player1Name = currentTable.Player1Name;
-                //        otherTable.TableName = string.Format("{0} vs {1}", otherTable.Player1Name, otherTable.Player2Name);
-
-                //        currentTable.Player1Id = tmpTable.Player1Id;
-                //        currentTable.Player1Name = tmpTable.Player1Name;
-                //        currentTable.TableName = string.Format("{0} vs {1}", currentTable.Player1Name, currentTable.Player2Name);
-                //    }
-                //    else if (otherTable.Player2Id == player1.PlayerId)
-                //    {
-                //        otherTable.Player2Id = currentTable.Player1Id;
-                //        otherTable.Player2Name = currentTable.Player1Name;
-                //        otherTable.TableName = string.Format("{0} vs {1}", otherTable.Player1Name, otherTable.Player2Name);
-
-                //        currentTable.Player1Id = tmpTable.Player2Id;
-                //        currentTable.Player1Name = tmpTable.Player2Name;
-                //        currentTable.TableName = string.Format("{0} vs {1}", currentTable.Player1Name, currentTable.Player2Name);
-                //    }
-                //}
-
-                //if (player2.PlayerId != intPlayer2Id)
-                //{
-                //    tmpTable = new TournamentMainRoundTable();
-
-                //    TournamentMainRoundTable otherTable = conn.Get<TournamentMainRoundTable>(player2.TableId);
-
-                //    tmpTable = otherTable;
-
-                //    if (otherTable.Player1Id == player2.PlayerId)
-                //    {
-                //        otherTable.Player1Id = currentTable.Player1Id;
-                //        otherTable.Player1Name = currentTable.Player1Name;
-                //        otherTable.TableName = string.Format("{0} vs {1}", otherTable.Player1Name, otherTable.Player2Name);
-
-                //        currentTable.Player1Id = tmpTable.Player1Id;
-                //        currentTable.Player1Name = tmpTable.Player1Name;
-                //        currentTable.TableName = string.Format("{0} vs {1}", currentTable.Player1Name, currentTable.Player2Name);
-                //    }
-                //    else if (otherTable.Player2Id == player2.PlayerId)
-                //    {
-                //        otherTable.Player2Id = currentTable.Player1Id;
-                //        otherTable.Player2Name = currentTable.Player1Name;
-                //        otherTable.TableName = string.Format("{0} vs {1}", otherTable.Player1Name, otherTable.Player2Name);
-
-                //        currentTable.Player1Id = tmpTable.Player2Id;
-                //        currentTable.Player1Name = tmpTable.Player2Name;
-                //        currentTable.TableName = string.Format("{0} vs {1}", currentTable.Player1Name, currentTable.Player2Name);
-                //    }
-                //}
-
             }
 
             Navigation.PopAsync();
         }
+
+        #endregion
+
+        #region "Page-specific class"
+
+        private class clsPlayerInfo
+        {
+            public int PlayerId { get; set; }
+            public string PlayerName { get; set; }
+            public int TableId { get; set; }
+
+            public clsPlayerInfo(int Id, string Name, int TableId)
+            {
+                this.PlayerId = Id;
+                this.PlayerName = Name;
+                this.TableId = TableId;
+            }
+
+        }
+        #endregion
+
     }
 }

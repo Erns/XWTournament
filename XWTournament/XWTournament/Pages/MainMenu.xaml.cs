@@ -65,6 +65,7 @@ namespace XWTournament.Pages
             }
         }
 
+        #region "Global timer shit"
         TournamentMainRoundInfoTimer_ViewModel tmpVM = null;
         public void RoundTimer(TimeSpan time, int intTime, ref TournamentMainRoundInfoTimer_ViewModel timerRoundBtn_VM)
         {
@@ -125,5 +126,7 @@ namespace XWTournament.Pages
         {
             DisplayAlert("Oy!", "Round over!", "yup");
         }
+        #endregion
+
     }
 }

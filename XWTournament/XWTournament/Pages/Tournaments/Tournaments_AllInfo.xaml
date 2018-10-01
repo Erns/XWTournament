@@ -37,16 +37,41 @@
         <ContentPage.Content>
             
             <Grid Padding="10">
+
+                <StackLayout Orientation="Horizontal">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ListView x:Name="activePlayersListView_Col1" SelectionMode="None" HasUnevenRows="True" Grid.Row="0" Grid.Column="0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextCell   Text="{Binding Name}"
+                                                Detail="{Binding Score, StringFormat='Score {0}'}" />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <ListView x:Name="activePlayersListView_Col2" SelectionMode="None" HasUnevenRows="True" Grid.Row="0" Grid.Column="1">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextCell   Text="{Binding Name}"
+                                                Detail="{Binding Score, StringFormat='Score {0}'}" />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                    
+                    
+                </StackLayout>
                 
-                <ListView x:Name="activePlayersListView" SelectionMode="None">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextCell   Text="{Binding Name}"
-                                Detail="{Binding Active}"
-                                />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+
 
                 <!--FAB-->
                 <Button x:Name="fabAddPlayers" Style="{StaticResource fabBtnStyle}" Clicked="addPlayers">
