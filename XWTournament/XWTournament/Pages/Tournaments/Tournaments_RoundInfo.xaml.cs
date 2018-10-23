@@ -49,6 +49,8 @@ namespace XWTournament.Pages.Tournaments
 
                 bool blnEnableRows = (round.Number < intRoundCount ? false : true);
 
+                blnEnableRows = true;  //Keeping them all enabled for now
+
                 //Set using the ViewModel version.  This allows being able to manipulate back and forth across the class properties, while displaying as intended on the GUI
                 //while also ensuring none of the goings ons of the properties touching each other don't occur without this specific view model (such as the SQL table updates)
                 ObservableCollection<TournamentMainRoundTable_ViewModel> lstTables = new ObservableCollection<TournamentMainRoundTable_ViewModel>();

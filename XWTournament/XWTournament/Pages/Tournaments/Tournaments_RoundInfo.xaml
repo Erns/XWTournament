@@ -20,14 +20,12 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50"/>
+                                        <!--<ColumnDefinition Width="50"/>-->
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="50"/>
+                                        <!--<ColumnDefinition Width="50"/>-->
                                     </Grid.ColumnDefinitions>
 
-                                    <Entry Grid.Row="0" Grid.Column="0" Placeholder="#1" MaxLength="3" Text="{Binding Player1Score_VM, Mode=TwoWay}" HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" Keyboard="Numeric" />
-                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding TournamentMainRoundTable.Number, StringFormat='Table {0}'}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="Medium" FontAttributes="Bold" />
-                                    <Entry Grid.Row="0" Grid.Column="2" Placeholder="#2" MaxLength="3" Text="{Binding Player2Score_VM, Mode=TwoWay}" HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" Keyboard="Numeric" />
+                                    <Label Grid.Row="0" Grid.Column="0" Text="{Binding TournamentMainRoundTable.Number, StringFormat='Table #{0}'}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="Medium" FontAttributes="Bold" />
 
                                 </Grid>
 
@@ -37,22 +35,26 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="25"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Switch Grid.Row="0" Grid.Column="0" IsToggled="{Binding Player1Winner_VM, Mode=TwoWay}" IsEnabled="{Binding ScoreTied_VM, Mode=OneWay}" />
+                                    <!--Player 1-->
+                                    <Label Grid.Row="0" Grid.Column="0" Text="{Binding TournamentMainRoundTable.Player1Name}" FontAttributes="{Binding Player1NameWinnerFont_VM, Mode=OneWay}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="End"  />
+                                    <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding Player1Winner_VM, Mode=TwoWay}" IsEnabled="{Binding ScoreTied_VM, Mode=OneWay}" />
+                                    <Entry Grid.Row="0" Grid.Column="2" Placeholder="#1" MaxLength="3" Text="{Binding Player1Score_VM, Mode=TwoWay}" HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Start" Keyboard="Numeric" />
 
-                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding TournamentMainRoundTable.Player1Name}" FontAttributes="{Binding Player1NameWinnerFont_VM, Mode=OneWay}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Start"  />
 
-                                    <Label Grid.Row="0" Grid.Column="2"  Text=" vs " HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center" />
+                                    <!--vs-->
+                                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"  Text=" vs " HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center" />
 
-                                    <Label Grid.Row="0" Grid.Column="3" Text="{Binding TournamentMainRoundTable.Player2Name}" FontAttributes="{Binding Player2NameWinnerFont_VM, Mode=OneWay}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="End" />
 
-                                    <Switch Grid.Row="0" Grid.Column="4" IsToggled="{Binding Player2Winner_VM, Mode=TwoWay}" IsEnabled="{Binding ScoreTied_VM, Mode=OneWay}" />
+                                    <!--Player 2-->
+                                    <Label Grid.Row="2" Grid.Column="0" Text="{Binding TournamentMainRoundTable.Player2Name}" FontAttributes="{Binding Player2NameWinnerFont_VM, Mode=OneWay}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="End" />
+                                    <Switch Grid.Row="2" Grid.Column="1" IsToggled="{Binding Player2Winner_VM, Mode=TwoWay}" IsEnabled="{Binding ScoreTied_VM, Mode=OneWay}" />
+                                    <Entry Grid.Row="2" Grid.Column="2" Placeholder="#2" MaxLength="3" Text="{Binding Player2Score_VM, Mode=TwoWay}" HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Start" Keyboard="Numeric" />
+
 
 
                                 </Grid>
