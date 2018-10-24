@@ -9,29 +9,65 @@ using Xamarin.Forms.Xaml;
 using XWTournament.Models;
 using XWTournament.ViewModel;
 using System.Threading;
+using System.Collections.ObjectModel;
 
 namespace XWTournament.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainMenu : MasterDetailPage
     {
-        public List<MainMenuItem> MainMenuItems { get; set; }
+        public List<MainMenuGroup> MainMenuGroups { get; set; }
 
         private static int round_time = 0;
         private static System.Timers.Timer ROUND_TIMER = null;
 
         public MainMenu()
         {
+            MainMenuGroups = new List<MainMenuGroup>();
 
             // Set the binding context to this code behind.
             BindingContext = this;
 
-            // Build the Menu
-            MainMenuItems = new List<MainMenuItem>()
-            {
-                new MainMenuItem() { Title = "Players", Icon = "\uf0c0", TargetType = typeof(Players_Main) },
-                new MainMenuItem() { Title = "Tournaments", Icon = "\uf02d", TargetType = typeof(Tournaments_Main) }
-            };
+            var allListItemGroups = new List<List<MainMenuItem>>();
+
+            MainMenuGroup mainMenuGroup;
+
+            //mainMenuGroup = new MainMenuGroup()
+            //{
+            //    GroupName = "Offline",
+            //    Items =
+            //    {
+            //        new MainMenuItem() { Title = "Players", Icon = "\uf0c0", TargetType = typeof(Players_Main) },
+            //        new MainMenuItem() { Title = "Tournaments", Icon = "\uf02d", TargetType = typeof(Tournaments_Main) },
+            //    }
+            //};
+
+            mainMenuGroup = new MainMenuGroup();
+            mainMenuGroup.GroupName = "Offline";
+            mainMenuGroup.Items.Add(new MainMenuItem() { Title = "Players", Icon = "\uf0c0", TargetType = typeof(Players_Main) });
+            mainMenuGroup.Items.Add(new MainMenuItem() { Title = "Tournaments", Icon = "\uf02d", TargetType = typeof(Tournaments_Main) });
+
+            MainMenuGroups.Add(mainMenuGroup);
+
+
+            //mainMenuGroup = new MainMenuGroup()
+            //{
+            //    GroupName = "Online",
+            //    Items =
+            //    {
+            //        new MainMenuItem() { Title = "Online Account", Icon = "\uf0c0", TargetType = typeof(OnlineAccount_Main) }
+            //    }
+            //};
+            //MainMenuGroups.Add(mainMenuGroup);
+
+            //// Build the Menu
+            //MainMenuItems = new List<MainMenuItem>()
+            //{
+            //    new MainMenuItem() { GroupName = "Offline", Title = "Players", Icon = "\uf0c0", TargetType = typeof(Players_Main) },
+            //    new MainMenuItem() { GroupName = "Offline", Title = "Tournaments", Icon = "\uf02d", TargetType = typeof(Tournaments_Main) },
+            //    new MainMenuItem() { GroupName = "Online", Title = "Online Account", Icon = "\uf0c0", TargetType = typeof(OnlineAccount_Main) }
+
+            //};
 
             // Set the default page, this is the "home" page.
             Detail = new NavigationPage(new Players_Main());
@@ -40,6 +76,7 @@ namespace XWTournament.Pages
 
             //Create all the needed tables out the gate
             Utilities.InitializeTournamentMain(new SQLite.SQLiteConnection(App.DB_PATH));
+
         }
 
         // When a MenuItem is selected.
@@ -50,6 +87,9 @@ namespace XWTournament.Pages
             {
                 switch (item.Title.ToString())
                 {
+                    case "Online Account":
+                        Detail = new NavigationPage(new OnlineAccount_Main());
+                        break;
 
                     case "Players":
                         Detail = new NavigationPage(new Players_Main());

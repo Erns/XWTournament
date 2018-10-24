@@ -10,8 +10,10 @@ namespace XWTournament.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Group { get; set; }
         public string Email { get; set; }
         public bool Active { get; set; }
         public Nullable<DateTime> DateDeleted { get; set; } = null;
+        public int API_Id { get; set; } = 0;
     }
 }

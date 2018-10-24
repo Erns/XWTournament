@@ -16,6 +16,7 @@ namespace XWTournament.Models
         public int MaxPoints { get; set; }
         public int RoundTimeLength { get; set; }
         public Nullable<DateTime> DateDeleted { get; set; } = null;
+        public int API_Id { get; set; } = 0;
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<TournamentMainPlayer> Players { get; set; } = new List<TournamentMainPlayer>();
@@ -61,6 +62,8 @@ namespace XWTournament.Models
         public int MOV { get; set; }
         public decimal SOS { get; set; }
 
+        public int API_Id { get; set; } = 0;
+
     }
 
     public class TournamentMainRound
@@ -73,6 +76,8 @@ namespace XWTournament.Models
         public int Number { get; set; }
         public bool Swiss { get; set; } = true;
         public DateTime RoundTimeEnd { get; set; }
+
+        public int API_Id { get; set; } = 0;
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<TournamentMainRoundTable> Tables { get; set; } = new List<TournamentMainRoundTable>();
@@ -106,6 +111,8 @@ namespace XWTournament.Models
         public string Player2Name { get; set; } = "N/A";
         public int Player2Score { get; set; }
         public bool Player2Winner { get; set; } = false;
+
+        public int API_Id { get; set; } = 0;
 
     }
 

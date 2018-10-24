@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XWTournament.Pages.OnlineAccount_Main">
+    <ContentPage.Content>
+        <Grid>
+            <StackLayout x:Name="loginUserStack" Padding="25, 10, 25, 10">
+
+                <Entry x:Name="userEntry"
+                   Placeholder="User Name"
+                   Keyboard="Text"/>
+
+                <Entry x:Name="passwordEntry"
+                   Placeholder="Password"
+                   Keyboard="Text"
+                   IsPassword="True"/>
+
+                <Label x:Name="loginFailEntry"
+                   Text="Login Failed"
+                   TextColor="Red"
+                   IsVisible="False"></Label>
+
+                <StackLayout Orientation="Horizontal"
+                         VerticalOptions="EndAndExpand">
+
+                    <Button Text="Register"
+                    BackgroundColor="LightGreen"
+                    x:Name="registerButton"                      
+                    Clicked="registerButton_Clicked"
+                    VerticalOptions="End"
+                    HorizontalOptions="FillAndExpand" />
+                    
+                    <Button Text="Login"
+                    BackgroundColor="LightGray"
+                    x:Name="loginButton"                      
+                    Clicked="loginButton_Clicked"
+                    VerticalOptions="End"
+                    HorizontalOptions="FillAndExpand" />
+
+                </StackLayout>
+                
+            </StackLayout>
+
+            <StackLayout x:Name="logoutUserStack" Padding="25, 10, 25, 10" IsVisible="False">
+
+                <Label x:Name="userGreeting"></Label>
+
+
+                <StackLayout Orientation="Horizontal"
+                         VerticalOptions="EndAndExpand">
+
+                    <Button Text="Logout"
+                    BackgroundColor="LightGray"
+                    x:Name="logoutButton"                      
+                    Clicked="logoutButton_Clicked"
+                    VerticalOptions="End"
+                    HorizontalOptions="FillAndExpand" />
+
+                </StackLayout>
+            </StackLayout>
+
+            <ContentView x:Name="loadingOverlay" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
+
+
+            <WebView x:Name="registerUser" IsVisible="False">
+                
+            </WebView>
+        </Grid>
+        
+    </ContentPage.Content>
+    
+    
+</ContentPage>

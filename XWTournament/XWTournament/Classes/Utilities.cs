@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RestSharp;
+using RestSharp.Authenticators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,20 @@ namespace XWTournament.Classes
 {
     public static class Utilities
     {
+        #region "RestSharp items"
+        public static RestClient InitializeRestClient()
+        {
+            RestClient client = new RestClient("http://xwtwebapi.gear.host/api/");
+
+            if (App.CurrentUser != null)
+                client.Authenticator = new HttpBasicAuthenticator(App.CurrentUser.UserName, App.CurrentUser.APIPassword);
+
+            return client;
+        }
+        #endregion
+
+
+
         public static void InitializeTournamentMain(SQLite.SQLiteConnection conn)
         {
             //Need to create all tables for SQLite
@@ -17,6 +33,8 @@ namespace XWTournament.Classes
             conn.CreateTable<TournamentMainRoundTable>();
 
             conn.CreateTable<Player>();
+
+            conn.CreateTable<UserAccount>();
         }
 
         private static Random rng = new Random();

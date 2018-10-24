@@ -22,13 +22,24 @@
                     HorizontalOptions="Center"
                     Margin="0, 27, 0, 5" />
 
+                <!--Offline List-->
                 <ListView 
                         x:Name="MenuListView"
-                        ItemsSource="{Binding MainMenuItems}"
+                        ItemsSource="{Binding MainMenuGroups}"
                         ItemSelected="MainMenuItem_Selected"
                         VerticalOptions="FillAndExpand" 
-                        SeparatorVisibility="None" 
-                        BackgroundColor="#f5f5f5">
+                        SeparatorVisibility="Default"                       
+                        BackgroundColor="#f5f5f5"
+                        IsGroupingEnabled="True" >  <!--GroupDisplayBinding="{Binding GroupName}"-->
+
+                    <ListView.GroupHeaderTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label Text="{Binding GroupName}"></Label>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.GroupHeaderTemplate>
+                    
                     <!-- Menu background color -->
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -47,7 +58,6 @@
                                         <Label Grid.Row="0" Grid.Column="0" Text="{Binding Icon}" Style="{StaticResource lblFontAwesome_S}" HorizontalOptions="Center" FontSize="Medium" VerticalOptions="CenterAndExpand" />
                                         <Label Grid.Row="0" Grid.Column="1" Text="{Binding Title}" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand" />
                                         
-                                        <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Color="Gray"  HeightRequest="1" Opacity="0.5" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" />
                                     </Grid>
                                     
                                 </StackLayout>
