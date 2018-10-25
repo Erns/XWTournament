@@ -13,7 +13,7 @@ namespace XWTournament.Classes
         #region "RestSharp items"
         public static RestClient InitializeRestClient()
         {
-            RestClient client = new RestClient("http://xwtwebapi.gear.host/api/");
+            RestClient client = new RestClient("https://xwtwebapi.gear.host/api/");
 
             if (App.CurrentUser != null)
                 client.Authenticator = new HttpBasicAuthenticator(App.CurrentUser.UserName, App.CurrentUser.APIPassword);
@@ -21,8 +21,6 @@ namespace XWTournament.Classes
             return client;
         }
         #endregion
-
-
 
         public static void InitializeTournamentMain(SQLite.SQLiteConnection conn)
         {

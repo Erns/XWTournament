@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms" 
-                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:local="clr-namespace:XWTournament.Classes"
                   x:Class="XWTournament.Pages.MainMenu">
     <MasterDetailPage.Master>
         <ContentPage 
@@ -20,7 +21,20 @@
                     FontSize="22" 
                     VerticalOptions="Center" 
                     HorizontalOptions="Center"
-                    Margin="0, 27, 0, 5" />
+                    Margin="0, 27, 0, 5" >
+
+                    <Label.Effects>
+                        <local:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                            <local:ShadowEffect.Color>
+                                <OnPlatform x:TypeArguments="Color">
+                                    <On Platform="iOS, Android, UWP" Value="Black" />
+                                </OnPlatform>
+                            </local:ShadowEffect.Color>
+                        </local:ShadowEffect>
+                    </Label.Effects>
+                </Label>
+
+
 
                 <!--Offline List-->
                 <ListView 
@@ -35,7 +49,21 @@
                     <ListView.GroupHeaderTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Label Text="{Binding GroupName}"></Label>
+                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="LightSlateGray">
+                                    <Grid Padding="15, 10" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                                        <Label Text="{Binding GroupName}" VerticalOptions="CenterAndExpand" TextColor="White" FontAttributes="Bold" FontSize="Large">
+                                            <Label.Effects>
+                                                <local:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                                    <local:ShadowEffect.Color>
+                                                        <OnPlatform x:TypeArguments="Color">
+                                                            <On Platform="iOS, Android, UWP" Value="Black" />
+                                                        </OnPlatform>
+                                                    </local:ShadowEffect.Color>
+                                                </local:ShadowEffect>
+                                            </Label.Effects>
+                                        </Label>
+                                    </Grid>
+                                </StackLayout>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.GroupHeaderTemplate>

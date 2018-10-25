@@ -4,10 +4,10 @@ using System.Text;
 
 namespace XWTournament.Models
 {
-    public class MainMenuGroup
+    public class MainMenuGroup: List<MainMenuItem>
     {
         public string GroupName { get; set; }
-        public List<MainMenuItem> Items { get; set; } = new List<MainMenuItem>();
+        public List<MainMenuItem> Items => this;
     }
 
     public class MainMenuItem

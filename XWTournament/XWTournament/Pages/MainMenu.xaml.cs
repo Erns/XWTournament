@@ -32,42 +32,25 @@ namespace XWTournament.Pages
 
             MainMenuGroup mainMenuGroup;
 
-            //mainMenuGroup = new MainMenuGroup()
-            //{
-            //    GroupName = "Offline",
-            //    Items =
-            //    {
-            //        new MainMenuItem() { Title = "Players", Icon = "\uf0c0", TargetType = typeof(Players_Main) },
-            //        new MainMenuItem() { Title = "Tournaments", Icon = "\uf02d", TargetType = typeof(Tournaments_Main) },
-            //    }
-            //};
-
-            mainMenuGroup = new MainMenuGroup();
+            //Offline grouping
+            mainMenuGroup = new MainMenuGroup()
+            {
+                new MainMenuItem() { Title = "Players", Icon = "\uf0c0", TargetType = typeof(Players_Main) },
+                new MainMenuItem() { Title = "Tournaments", Icon = "\uf02d", TargetType = typeof(Tournaments_Main) }
+            };
             mainMenuGroup.GroupName = "Offline";
-            mainMenuGroup.Items.Add(new MainMenuItem() { Title = "Players", Icon = "\uf0c0", TargetType = typeof(Players_Main) });
-            mainMenuGroup.Items.Add(new MainMenuItem() { Title = "Tournaments", Icon = "\uf02d", TargetType = typeof(Tournaments_Main) });
 
             MainMenuGroups.Add(mainMenuGroup);
 
+            //Online grouping
+            mainMenuGroup = new MainMenuGroup()
+            {
+                new MainMenuItem() { Title = "Account", Icon = "\uf0c0", TargetType = typeof(OnlineAccount_Main) }
+            };
+            mainMenuGroup.GroupName = "Online";
 
-            //mainMenuGroup = new MainMenuGroup()
-            //{
-            //    GroupName = "Online",
-            //    Items =
-            //    {
-            //        new MainMenuItem() { Title = "Online Account", Icon = "\uf0c0", TargetType = typeof(OnlineAccount_Main) }
-            //    }
-            //};
-            //MainMenuGroups.Add(mainMenuGroup);
+            MainMenuGroups.Add(mainMenuGroup);
 
-            //// Build the Menu
-            //MainMenuItems = new List<MainMenuItem>()
-            //{
-            //    new MainMenuItem() { GroupName = "Offline", Title = "Players", Icon = "\uf0c0", TargetType = typeof(Players_Main) },
-            //    new MainMenuItem() { GroupName = "Offline", Title = "Tournaments", Icon = "\uf02d", TargetType = typeof(Tournaments_Main) },
-            //    new MainMenuItem() { GroupName = "Online", Title = "Online Account", Icon = "\uf0c0", TargetType = typeof(OnlineAccount_Main) }
-
-            //};
 
             // Set the default page, this is the "home" page.
             Detail = new NavigationPage(new Players_Main());
@@ -87,7 +70,7 @@ namespace XWTournament.Pages
             {
                 switch (item.Title.ToString())
                 {
-                    case "Online Account":
+                    case "Account":
                         Detail = new NavigationPage(new OnlineAccount_Main());
                         break;
 
