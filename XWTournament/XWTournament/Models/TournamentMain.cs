@@ -12,11 +12,10 @@ namespace XWTournament.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateTime StartDate { get; set; }
+        public Nullable<DateTime> StartDate { get; set; } = null;
         public int MaxPoints { get; set; }
         public int RoundTimeLength { get; set; }
         public Nullable<DateTime> DateDeleted { get; set; } = null;
-        public int API_Id { get; set; } = 0;
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<TournamentMainPlayer> Players { get; set; } = new List<TournamentMainPlayer>();
@@ -34,6 +33,9 @@ namespace XWTournament.Models
 
             return String.Join(",", lstIDs.ToArray());
         }
+
+        public int API_Id { get; set; } = 0;
+
     }
 
     public class TournamentMainPlayer
@@ -42,7 +44,7 @@ namespace XWTournament.Models
         public int Id { get; set; }
 
         [ForeignKey(typeof(TournamentMain))]
-        public int TournmentId { get; set; }
+        public int TournamentId { get; set; }
 
         [ForeignKey(typeof(Player))]
         public int PlayerId { get; set; }
@@ -72,10 +74,10 @@ namespace XWTournament.Models
         public int Id { get; set; }
 
         [ForeignKey(typeof(TournamentMain))]
-        public int TournmentId { get; set; }
+        public int TournamentId { get; set; }
         public int Number { get; set; }
         public bool Swiss { get; set; } = true;
-        public DateTime RoundTimeEnd { get; set; }
+        public Nullable<DateTime> RoundTimeEnd { get; set; }
 
         public int API_Id { get; set; } = 0;
 

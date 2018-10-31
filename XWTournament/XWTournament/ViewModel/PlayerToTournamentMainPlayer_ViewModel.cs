@@ -39,7 +39,7 @@ namespace XWTournament.ViewModel
 
             if (tournamentPlayer is null)
             {
-                TournamentMainPlayer.TournmentId = intTournamentId;
+                TournamentMainPlayer.TournamentId = intTournamentId;
                 TournamentMainPlayer.PlayerId = player.Id;
                 TournamentMainPlayer.PlayerName = player.Name;
                 TournamentMainPlayer.Active = player.Active;

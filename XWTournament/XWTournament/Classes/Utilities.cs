@@ -145,7 +145,7 @@ namespace XWTournament.Classes
                 decimal decSoS = 0;
                 foreach (int opponentId in player.OpponentIds)
                 {
-                    TournamentMainPlayer opponent = dctPlayers[opponentId];
+                    TournamentMainPlayer opponent = (dctPlayers.ContainsKey(opponentId) ? dctPlayers[opponentId] : new TournamentMainPlayer());
                     if (opponent.RoundsPlayed == 0) continue;
                     decSoS += Decimal.Divide(opponent.Score, opponent.RoundsPlayed);
                 }

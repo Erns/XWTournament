@@ -37,7 +37,7 @@ namespace XWTournament.Pages.Tournaments
 
                 nameEntry.Text = openTournament.Name;
                 pointMaxEntry.Text = openTournament.MaxPoints.ToString();
-                dateEntry.Date = openTournament.StartDate;
+                dateEntry.Date = openTournament.StartDate??DateTime.Today;
                 minutesEntry.Text = openTournament.RoundTimeLength.ToString();
             }
         }

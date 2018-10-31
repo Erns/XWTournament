@@ -72,8 +72,8 @@ namespace XWTournament.Pages.Tournaments
                     //If the round time started previously, keep it going
                     if (round.RoundTimeEnd > DateTime.Now)
                     {
-                        dteRoundTimeEnd = round.RoundTimeEnd;
-                        TimeSpan time = round.RoundTimeEnd - DateTime.Now;
+                        dteRoundTimeEnd = round.RoundTimeEnd??DateTime.Now;
+                        TimeSpan time = (round.RoundTimeEnd??DateTime.Now) - DateTime.Now;
                         App.MasterMainPage.RoundTimer(time, Convert.ToInt32(time.TotalSeconds), ref timerRoundBtn_VM);
                     }
 
@@ -138,7 +138,7 @@ namespace XWTournament.Pages.Tournaments
                         round = conn.GetWithChildren<TournamentMainRound>(intRoundId);
                         round.RoundTimeEnd = DateTime.Now;
                         conn.Update(round);
-                        dteRoundTimeEnd = round.RoundTimeEnd;
+                        dteRoundTimeEnd = round.RoundTimeEnd??DateTime.Now;
                     }
 
                     //Cancel any pending notifications

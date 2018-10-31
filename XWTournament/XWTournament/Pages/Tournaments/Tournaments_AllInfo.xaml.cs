@@ -370,7 +370,7 @@ namespace XWTournament.Pages.Tournaments
 
             //Create a new round
             TournamentMainRound round = new TournamentMainRound();
-            round.TournmentId = intTournID;
+            round.TournamentId = intTournID;
             round.Number = objTournMain.Rounds.Count + 1;
             round.Swiss = blnSwiss;
 
