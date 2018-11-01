@@ -10,6 +10,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XWTournament.Classes;
 using XWTournament.Models;
+using XWTournament.ViewModel;
 
 namespace XWTournament.Pages
 {
@@ -17,11 +18,14 @@ namespace XWTournament.Pages
 	public partial class OnlineAccount_Main : ContentPage
 	{
         RestClient client = Utilities.InitializeRestClient();
+        LoadingOverlay_ViewModel loadingOverlayVM;
 
         public OnlineAccount_Main ()
 		{
 			InitializeComponent ();
-            loadingOverlay.BindingContext = this;
+
+            loadingOverlayVM = new LoadingOverlay_ViewModel();
+            loadingOverlay.BindingContext = loadingOverlayVM;
 
             if (App.IsUserLoggedIn)
             {
@@ -35,7 +39,7 @@ namespace XWTournament.Pages
 
         private void loginButton_Clicked(object sender, EventArgs e)
         {
-            this.IsBusy = true;
+            loadingOverlayVM.IsBusy = true;            
             loginFailEntry.IsVisible = false;
 
             LogoutUser();
@@ -43,6 +47,7 @@ namespace XWTournament.Pages
             if (string.IsNullOrEmpty(userEntry.Text) || string.IsNullOrEmpty(passwordEntry.Text))
             {
                 loginFailEntry.IsVisible = true;
+                loadingOverlayVM.IsBusy = false;
                 return;
             }
 
@@ -66,7 +71,7 @@ namespace XWTournament.Pages
             if (contentLogin.ToUpper().Contains("GET: FALSE"))
             {
                 loginFailEntry.IsVisible = true;
-                this.IsBusy = false;
+                loadingOverlayVM.IsBusy = false;
                 return;
             }
 
@@ -89,12 +94,12 @@ namespace XWTournament.Pages
             {
                 //If we couldn't interpret the response, it failed
                 loginFailEntry.IsVisible = true;
-                this.IsBusy = false;
+                loadingOverlayVM.IsBusy = false;
                 return;
             }
 
 
-            this.IsBusy = false;
+            loadingOverlayVM.IsBusy = false;
 
         }
 
