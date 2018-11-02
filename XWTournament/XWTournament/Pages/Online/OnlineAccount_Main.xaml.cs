@@ -18,14 +18,12 @@ namespace XWTournament.Pages
 	public partial class OnlineAccount_Main : ContentPage
 	{
         RestClient client = Utilities.InitializeRestClient();
-        LoadingOverlay_ViewModel loadingOverlayVM;
 
         public OnlineAccount_Main ()
 		{
 			InitializeComponent ();
 
-            loadingOverlayVM = new LoadingOverlay_ViewModel();
-            loadingOverlay.BindingContext = loadingOverlayVM;
+            loadingOverlay.BindingContext = this;
 
             if (App.IsUserLoggedIn)
             {
@@ -37,9 +35,9 @@ namespace XWTournament.Pages
 
         }
 
-        private void loginButton_Clicked(object sender, EventArgs e)
+        private async void loginButton_ClickedAsync(object sender, EventArgs e)
         {
-            loadingOverlayVM.IsBusy = true;            
+            this.IsBusy = true;
             loginFailEntry.IsVisible = false;
 
             LogoutUser();
@@ -47,7 +45,7 @@ namespace XWTournament.Pages
             if (string.IsNullOrEmpty(userEntry.Text) || string.IsNullOrEmpty(passwordEntry.Text))
             {
                 loginFailEntry.IsVisible = true;
-                loadingOverlayVM.IsBusy = false;
+                this.IsBusy = false;
                 return;
             }
 
@@ -64,14 +62,14 @@ namespace XWTournament.Pages
             user.Password = "";
 
             // execute the request
-            IRestResponse responseLogin = client.Execute(requestLogin);
+            var responseLogin = await client.ExecuteTaskAsync(requestLogin);
             var contentLogin = responseLogin.Content;
 
             //Check if we get a fail from API
             if (contentLogin.ToUpper().Contains("GET: FALSE"))
             {
                 loginFailEntry.IsVisible = true;
-                loadingOverlayVM.IsBusy = false;
+                this.IsBusy = false;
                 return;
             }
 
@@ -94,12 +92,11 @@ namespace XWTournament.Pages
             {
                 //If we couldn't interpret the response, it failed
                 loginFailEntry.IsVisible = true;
-                loadingOverlayVM.IsBusy = false;
+                this.IsBusy = false;
                 return;
             }
 
-
-            loadingOverlayVM.IsBusy = false;
+            this.IsBusy = false;
 
         }
 

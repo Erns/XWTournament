@@ -12,7 +12,7 @@ namespace XWTournament.Classes
     {
         static RestClient client = Utilities.InitializeRestClient();
 
-        public static string ImportAll()
+        public static async System.Threading.Tasks.Task<string> ImportAllAsync()
         {
             client = Utilities.InitializeRestClient();
 
@@ -34,8 +34,8 @@ namespace XWTournament.Classes
                     }
 
                     //Import general Players and general Tournament info
-                    ImportPlayers(lstCurrentPlayers);
-                    ImportTournaments(lstCurrentTournaments);
+                    await ImportPlayersAsync(lstCurrentPlayers);
+                    await ImportTournamentsAsync(lstCurrentTournaments);
 
 
                     //Import specific player, round, and table data for each tournament
@@ -73,7 +73,7 @@ namespace XWTournament.Classes
                                 request.AddUrlSegment("id", objTournMain.API_Id);
 
                                 // execute the request
-                                IRestResponse response = client.Execute(request);
+                                var response = await client.ExecuteTaskAsync(request);
                                 var content = response.Content;
 
                                 List<TournamentMain> result = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
@@ -231,14 +231,14 @@ namespace XWTournament.Classes
             return "";
         }
 
-        private static void ImportPlayers(List<Player> lstCurrentPlayers)
+        private static async System.Threading.Tasks.Task ImportPlayersAsync(List<Player> lstCurrentPlayers)
         {
             //Get Players
             RestRequest request = new RestRequest("Players/{userid}", Method.GET);
             request.AddUrlSegment("userid", App.CurrentUser.Id);
 
             // execute the request
-            IRestResponse response = client.Execute(request);
+            var response = await client.ExecuteTaskAsync(request);
             string content = response.Content;
 
             List<Player> lstApiPlayers = JsonConvert.DeserializeObject<List<Player>>(JsonConvert.DeserializeObject(content).ToString());
@@ -283,14 +283,14 @@ namespace XWTournament.Classes
             }
         }
 
-        private static void ImportTournaments(List<TournamentMain> lstCurrentTournaments)
+        private static async System.Threading.Tasks.Task ImportTournamentsAsync(List<TournamentMain> lstCurrentTournaments)
         {
             //Get Tournaments
             RestRequest request = new RestRequest("Tournaments/{userid}", Method.GET);
             request.AddUrlSegment("userid", App.CurrentUser.Id);
 
             // execute the request
-            IRestResponse response = client.Execute(request);
+            var response = await client.ExecuteTaskAsync(request);
             string content = response.Content;
 
             List<TournamentMain> lstApiTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());

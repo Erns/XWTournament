@@ -10,11 +10,11 @@
                 BackgroundColor="#232F34">
             <!-- Menu Title background color -->
 
+            <Grid>
+                <!-- Slide out Menu -->
+                <StackLayout VerticalOptions="FillAndExpand">
 
-            <!-- Slide out Menu -->
-            <StackLayout VerticalOptions="FillAndExpand">
-
-                <Label 
+                    <Label 
                     Style="{StaticResource lblFontAwesome_B}"
                     Text="&#xf511;     X-Wing Tournament" 
                     TextColor="White" 
@@ -23,83 +23,84 @@
                     HorizontalOptions="Center"
                     Margin="0, 27, 0, 5" >
 
-                    <Label.Effects>
-                        <local:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                            <local:ShadowEffect.Color>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="iOS, Android, UWP" Value="Black" />
-                                </OnPlatform>
-                            </local:ShadowEffect.Color>
-                        </local:ShadowEffect>
-                    </Label.Effects>
-                </Label>
+                        <Label.Effects>
+                            <local:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                <local:ShadowEffect.Color>
+                                    <OnPlatform x:TypeArguments="Color">
+                                        <On Platform="iOS, Android, UWP" Value="Black" />
+                                    </OnPlatform>
+                                </local:ShadowEffect.Color>
+                            </local:ShadowEffect>
+                        </Label.Effects>
+                    </Label>
 
 
 
-                <!--Offline List-->
-                <ListView 
+                    <!--Offline List-->
+                    <ListView 
                         x:Name="MenuListView"
                         ItemsSource="{Binding MainMenuGroups}"
-                        ItemSelected="MainMenuItem_Selected"
+                        ItemSelected="MainMenuItem_SelectedAsync"
                         VerticalOptions="FillAndExpand" 
                         SeparatorVisibility="Default"                       
                         BackgroundColor="#f5f5f5"
-                        IsGroupingEnabled="True" >  <!--GroupDisplayBinding="{Binding GroupName}"-->
+                        IsGroupingEnabled="True" >
+                        <!--GroupDisplayBinding="{Binding GroupName}"-->
 
-                    <ListView.GroupHeaderTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="LightSlateGray">
-                                    <Grid Padding="15, 10" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
-                                        <Label Text="{Binding GroupName}" VerticalOptions="CenterAndExpand" TextColor="White" FontAttributes="Bold" FontSize="Large">
-                                            <Label.Effects>
-                                                <local:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                                    <local:ShadowEffect.Color>
-                                                        <OnPlatform x:TypeArguments="Color">
-                                                            <On Platform="iOS, Android, UWP" Value="Black" />
-                                                        </OnPlatform>
-                                                    </local:ShadowEffect.Color>
-                                                </local:ShadowEffect>
-                                            </Label.Effects>
-                                        </Label>
-                                    </Grid>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.GroupHeaderTemplate>
-                    
-                    <!-- Menu background color -->
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
-                                    <Grid Padding="10" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="25"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
+                        <ListView.GroupHeaderTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="LightSlateGray">
+                                        <Grid Padding="15, 10" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                                            <Label Text="{Binding GroupName}" VerticalOptions="CenterAndExpand" TextColor="White" FontAttributes="Bold" FontSize="Large">
+                                                <Label.Effects>
+                                                    <local:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                                        <local:ShadowEffect.Color>
+                                                            <OnPlatform x:TypeArguments="Color">
+                                                                <On Platform="iOS, Android, UWP" Value="Black" />
+                                                            </OnPlatform>
+                                                        </local:ShadowEffect.Color>
+                                                    </local:ShadowEffect>
+                                                </Label.Effects>
+                                            </Label>
+                                        </Grid>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.GroupHeaderTemplate>
 
-                                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding Icon}" Style="{StaticResource lblFontAwesome_S}" HorizontalOptions="Center" FontSize="Medium" VerticalOptions="CenterAndExpand" />
-                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Title}" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand" />
-                                        
-                                    </Grid>
-                                    
-                                </StackLayout>
+                        <!-- Menu background color -->
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                                        <Grid Padding="10" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="25"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
 
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding Icon}" Style="{StaticResource lblFontAwesome_S}" HorizontalOptions="Center" FontSize="Medium" VerticalOptions="CenterAndExpand" />
+                                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Title}" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand" />
 
-                <StackLayout Orientation="Horizontal"
+                                        </Grid>
+
+                                    </StackLayout>
+
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <StackLayout Orientation="Horizontal"
                         VerticalOptions="End"
                         HorizontalOptions="FillAndExpand">
 
-                    <Button 
+                        <Button 
                         Style="{StaticResource btnFontAwesome_S}"
                         Text="&#xf059;    Help" 
                         FontSize="Small" 
@@ -109,10 +110,14 @@
                         TextColor="White"
                         
                         />
+                    </StackLayout>
+
+
                 </StackLayout>
                 
-            </StackLayout>
+                <ContentView x:Name="loadingOverlay" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
 
+            </Grid>
 
         </ContentPage>
     </MasterDetailPage.Master>

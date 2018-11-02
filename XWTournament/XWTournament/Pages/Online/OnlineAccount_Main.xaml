@@ -32,8 +32,8 @@
                     
                     <Button Text="Login"
                     BackgroundColor="LightGray"
-                    x:Name="loginButton"                      
-                    Clicked="loginButton_Clicked"
+                    x:Name="loginButton"  
+                    Clicked="loginButton_ClickedAsync"
                     VerticalOptions="End"
                     HorizontalOptions="FillAndExpand" />
 
@@ -59,11 +59,13 @@
                 </StackLayout>
             </StackLayout>
 
-            <ContentView x:Name="loadingOverlay" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy, Mode=TwoWay}"></ContentView>
 
             <WebView x:Name="registerUser" IsVisible="False">
                 
             </WebView>
+
+            <ContentView x:Name="loadingOverlay" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
+
         </Grid>
         
     </ContentPage.Content>

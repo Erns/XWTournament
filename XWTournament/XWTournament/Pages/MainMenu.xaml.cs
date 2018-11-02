@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using RestSharp;
 using Newtonsoft.Json;
 using SQLiteNetExtensions.Extensions;
+using XWTournament.Pages.Online;
 
 namespace XWTournament.Pages
 {
@@ -31,6 +32,7 @@ namespace XWTournament.Pages
 
             // Set the binding context to this code behind.
             BindingContext = this;
+            //loadingOverlay.BindingContext = this;
 
             var allListItemGroups = new List<List<MainMenuItem>>();
 
@@ -51,6 +53,7 @@ namespace XWTournament.Pages
             {
                 new MainMenuItem() { Title = "Account", Icon = "\uf0ac" },
                 new MainMenuItem() { Title = "Import To Local", Icon = "\uf019" },
+                new MainMenuItem() { Title = "Tournament Registration", Icon = "\uf019" }
             };
             mainMenuGroup.GroupName = "Online";
 
@@ -68,7 +71,7 @@ namespace XWTournament.Pages
         }
 
         // When a MenuItem is selected.
-        public void MainMenuItem_Selected(object sender, SelectedItemChangedEventArgs e)
+        public async Task MainMenuItem_SelectedAsync(object sender, SelectedItemChangedEventArgs e)
         {
             var item = e.SelectedItem as MainMenuItem;
             if (item != null)
@@ -82,11 +85,11 @@ namespace XWTournament.Pages
                     case "Import To Local":
                         if (App.IsUserLoggedIn)
                         {
-                            var confirmed = ImportPromptAsync();
+                            var confirmed = await ImportPromptAsync();
                         }
                         else
                         {
-                            DisplayAlert("Action Needed", "Please log into your user account first.", "OK");
+                            await DisplayAlert("Action Needed", "Please log into your user account first.", "OK");
                         }
                         break;
 
@@ -97,6 +100,18 @@ namespace XWTournament.Pages
                     case "Tournaments":
                         Detail = new NavigationPage(new Tournaments_Main());
                         break;
+
+                    case "Tournament Registration":
+                        if (App.IsUserLoggedIn)
+                        {
+                            Detail = new NavigationPage(new OnlineTournamentRegister());
+                        }
+                        else
+                        {
+                            await DisplayAlert("Action Needed", "Please log into your user account first.", "OK");
+                        }
+                        break;
+
                 }
 
                 MenuListView.SelectedItem = null;
@@ -110,7 +125,11 @@ namespace XWTournament.Pages
 
             if (confirmed)
             {
-                string strImportMsg = Online_Import.ImportAll();
+                this.IsBusy = true;
+                DisplayAlert("Importing", "Currently importing", "OK");
+
+                string strImportMsg = await Online_Import.ImportAllAsync();
+                this.IsBusy = false;
 
                 await DisplayAlert("Import", strImportMsg, "OK");
 
