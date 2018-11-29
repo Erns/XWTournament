@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XWTournament.Classes;
+using XWTournament.Models;
 
 namespace XWTournament.Pages.Online
 {
@@ -35,9 +37,18 @@ namespace XWTournament.Pages.Online
             this.IsBusy = true;
             loadingOverlay.IsVisible = true;
 
+            TournamentMain tournament = new TournamentMain()
+            {
+                Name = nameEntry.Text,
+                StartDate = dateEntry.Date
+            };
+
+
             //Search tournaments open to the public
-            RestRequest request = new RestRequest("Players/{userid}", Method.GET);
-            request.AddUrlSegment("userid", App.CurrentUser.Id);
+            //Using POST for the sake of passing a tournament object info to search with
+            IRestRequest request = new RestRequest("TournamentsSearch", Method.POST);
+            //request.AddUrlSegment("userid", App.CurrentUser.Id);
+            request.AddJsonBody(JsonConvert.SerializeObject(tournament));
 
             // execute the request
             var response = await client.ExecuteTaskAsync(request);

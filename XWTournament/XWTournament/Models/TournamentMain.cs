@@ -16,7 +16,7 @@ namespace XWTournament.Models
         public int MaxPoints { get; set; }
         public int RoundTimeLength { get; set; }
         public Nullable<DateTime> DateDeleted { get; set; } = null;
-        public bool PublishOnline { get; set; } = false;
+        public bool PublicSearch { get; set; } = false;
         public int API_Id { get; set; } = 0;
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
