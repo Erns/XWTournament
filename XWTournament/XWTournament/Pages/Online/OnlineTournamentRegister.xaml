@@ -9,7 +9,6 @@
                    Placeholder="Tournament Name"
                    Keyboard="Text"/>
 
-
                 <StackLayout Orientation="Horizontal">
                     <Label Text="Date"
                        VerticalOptions="CenterAndExpand"

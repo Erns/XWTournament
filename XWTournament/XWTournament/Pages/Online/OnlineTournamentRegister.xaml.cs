@@ -54,7 +54,12 @@ namespace XWTournament.Pages.Online
             var response = await client.ExecuteTaskAsync(request);
             string content = response.Content;
 
-            //List<Player> lstApiPlayers = JsonConvert.DeserializeObject<List<Player>>(JsonConvert.DeserializeObject(content).ToString());
+            List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
+
+            if (returnedTournaments.Count > 0)
+            {
+
+            }
 
             this.IsBusy = false;
             loadingOverlay.IsVisible = false;

@@ -159,7 +159,8 @@ namespace XWTournament.Pages.Tournaments
         {
             this.IsBusy = true;
 
-            int intTime = Convert.ToInt16(timerOptionsPicker.Items[timerOptionsPicker.SelectedIndex]);
+            //int intTime = Convert.ToInt16(timerOptionsPicker.Items[timerOptionsPicker.SelectedIndex]);
+            int intTime = Convert.ToInt16(timerOptionsEntry.Text);
             intTime *= 60; //Converting to seconds
 
             //Set the end time for the round

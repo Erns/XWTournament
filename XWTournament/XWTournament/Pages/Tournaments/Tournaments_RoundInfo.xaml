@@ -109,7 +109,7 @@
 
 
                                     <Label Grid.Row="0" Grid.Column="0" Text="Round Length" VerticalOptions="CenterAndExpand"/>
-                                    <Picker Grid.Row="0" Grid.Column="1" x:Name="timerOptionsPicker" VerticalOptions="CenterAndExpand" >
+                                    <!--<Picker Grid.Row="0" Grid.Column="1" x:Name="timerOptionsPicker" VerticalOptions="CenterAndExpand" >
                                         <Picker.ItemsSource>
                                             <x:Array Type="{x:Type x:Int16}">
                                                 <x:Int16>5</x:Int16>
@@ -122,7 +122,9 @@
                                         <Picker.SelectedItem>
                                             <x:Int16>75</x:Int16>
                                         </Picker.SelectedItem>
-                                    </Picker>
+                                    </Picker>-->
+
+                                    <Entry Grid.Row="0" Grid.Column="1" x:Name="timerOptionsEntry" VerticalOptions="CenterAndExpand" Keyboard="Numeric"  MaxLength="3"></Entry>
                                 
                                 </Grid>
                             
