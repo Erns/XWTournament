@@ -1,26 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="XWTournament.Pages.Online.OnlineTournamentRegister">
+             x:Class="XWTournament.Pages.Online.OnlineTournamentRegister"
+             Title="Tournament Registration">
     <ContentPage.Content>
         <Grid>
-            <StackLayout Padding="25, 10, 25, 10">
-                <Entry x:Name="nameEntry"
+            <ScrollView>
+                <StackLayout Padding="25, 10, 25, 10" >
+
+                    <Entry x:Name="nameEntry"
                    Placeholder="Tournament Name"
                    Keyboard="Text"/>
 
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Date"
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Date"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="Start"/>
 
-                    <DatePicker x:Name="dateEntry" VerticalOptions="CenterAndExpand" />
+                        <DatePicker x:Name="dateEntry" VerticalOptions="CenterAndExpand" />
+
+                    </StackLayout>
+
+                    <Button x:Name="searchButton" Text="Search" Clicked="searchButton_ClickedAsync"></Button>
+
+
+                    <StackLayout x:Name="searchResultsStack" IsVisible="False" Padding="0, 20, 0, 10" VerticalOptions="FillAndExpand">
+                        <Label Text="Results" FontSize="Large" FontAttributes="Italic"></Label>
+                        <ListView x:Name="searchResultsListView" SelectionMode="None" >
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextCell   Text="{Binding Name}"
+                                Detail="{Binding StartDate}"
+                                x:Name="{Binding Id}"
+                                CommandParameter="{Binding Id}"
+                                Tapped="searchTournamentItem_TappedAsync"
+                                />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                    </StackLayout>
+
 
                 </StackLayout>
-
-                <Button x:Name="searchButton" Text="Search" Clicked="searchButton_ClickedAsync"></Button>
-
-            </StackLayout>
+            </ScrollView>
+            
+            
+            
 
             <ContentView x:Name="loadingOverlay" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
 

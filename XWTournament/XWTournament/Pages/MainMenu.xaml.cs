@@ -53,7 +53,7 @@ namespace XWTournament.Pages
             {
                 new MainMenuItem() { Title = "Account", Icon = "\uf0ac" },
                 new MainMenuItem() { Title = "Import To Local", Icon = "\uf019" },
-                new MainMenuItem() { Title = "Tournament Registration", Icon = "\uf019" }
+                new MainMenuItem() { Title = "Tournament Registration", Icon = "\uf46d" }
             };
             mainMenuGroup.GroupName = "Online";
 

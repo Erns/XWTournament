@@ -54,15 +54,40 @@ namespace XWTournament.Pages.Online
             var response = await client.ExecuteTaskAsync(request);
             string content = response.Content;
 
-            List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
+            //List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
+            List<TournamentMain> returnedTournaments = new List<TournamentMain>();
+
+            for (int i = 1; i < 15; i++){
+                TournamentMain tmpTournament = new TournamentMain()
+                {
+                    Id = i,
+                    Name = "Testing " + i,
+                    StartDate = DateTime.Now
+                };
+                returnedTournaments.Add(tmpTournament);
+            };
+
 
             if (returnedTournaments.Count > 0)
             {
-
+                searchResultsListView.ItemsSource = returnedTournaments;
+                searchResultsStack.IsVisible = true;
             }
 
             this.IsBusy = false;
             loadingOverlay.IsVisible = false;
+        }
+
+        private async void searchTournamentItem_TappedAsync(TextCell sender, EventArgs e)
+        {
+            var answer = await DisplayAlert("Register", "Would you like to register for tournament " + sender.Text + " Id " + sender.CommandParameter + "?", "Yes", "No");
+            if (answer)
+            {
+                //Register register
+                await DisplayAlert("Confirmed", "Successfully registered for tournament!", "Sweet");
+
+            }
+            //Navigation.PushAsync(new Players_AddEdit(Convert.ToInt32(sender.CommandParameter.ToString())));
         }
     }
 }
