@@ -71,7 +71,7 @@ namespace XWTournament.Pages.Online
             if (returnedTournaments.Count > 0)
             {
                 searchResultsListView.ItemsSource = returnedTournaments;
-                searchResultsStack.IsVisible = true;
+                searchResultsListView.IsVisible = true;
             }
 
             this.IsBusy = false;
