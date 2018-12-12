@@ -35,6 +35,7 @@
                     BackgroundColor="LightGray"
                     x:Name="loginButton"  
                     Clicked="loginButton_ClickedAsync"
+                    Pressed="loginButton_Pressed"                            
                     VerticalOptions="End"
                     HorizontalOptions="FillAndExpand" />
 

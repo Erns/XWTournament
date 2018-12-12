@@ -52,8 +52,8 @@ namespace XWTournament.Pages
             mainMenuGroup = new MainMenuGroup()
             {
                 new MainMenuItem() { Title = "Account", Icon = "\uf0ac" },
-                new MainMenuItem() { Title = "Import To Local", Icon = "\uf019" },
-                new MainMenuItem() { Title = "Tournament Registration", Icon = "\uf46d" }
+                new MainMenuItem() { Title = "Tournaments (Online)", Icon = "\uf46d" },
+                new MainMenuItem() { Title = "Import To Local", Icon = "\uf019" }
             };
             mainMenuGroup.GroupName = "Online";
 
@@ -101,10 +101,10 @@ namespace XWTournament.Pages
                         Detail = new NavigationPage(new Tournaments_Main());
                         break;
 
-                    case "Tournament Registration":
+                    case "Tournaments (Online)":
                         if (App.IsUserLoggedIn)
                         {
-                            Detail = new NavigationPage(new OnlineTournamentRegister());
+                            Detail = new NavigationPage(new OnlineTournaments());
                         }
                         else
                         {

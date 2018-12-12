@@ -20,6 +20,7 @@ namespace XWTournament.Pages.Tournaments
 
         private int intRoundId = 0;
         private int intRoundNumber = 0;
+        private int intDefaultRoundLength = 0;
         private DateTime dteRoundTimeEnd = DateTime.Now;
 
         private const int cintMidNotifyId = 101;
@@ -33,6 +34,7 @@ namespace XWTournament.Pages.Tournaments
 		{
 			InitializeComponent ();
             Title = strTitle;
+            intDefaultRoundLength = allInfoPage.intDefaultRoundLength;
             this.intRoundId = intRoundId;
 
             //Tie the loading Overlay to the main page since this is what will be flagged as "IsBusy" when generating new rounds etc.
@@ -152,6 +154,7 @@ namespace XWTournament.Pages.Tournaments
             else
             {
                 timerPopup.IsVisible = true;
+                timerOptionsEntry.Text = intDefaultRoundLength.ToString();
             }
         }
 

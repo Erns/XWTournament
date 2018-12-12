@@ -14,23 +14,37 @@ using XWTournament.Models;
 namespace XWTournament.Pages.Online
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class OnlineTournamentRegister : ContentPage
+	public partial class OnlineTournaments : TabbedPage
 	{
         RestClient client = Utilities.InitializeRestClient();
 
-        public OnlineTournamentRegister ()
+        #region "Search Tournaments"
+
+
+        public OnlineTournaments()
 		{
 			InitializeComponent ();
 
+            //Shouldn't be able to even get to this point if not logged in, but just in case
             if (App.IsUserLoggedIn)
             {
                 searchButton.IsVisible = true;
+                onlineTournamentsLogScorePage.IsVisible = true;
+                LoadOnlineActiveTournamentsAsync();
             }
             else
             {
                 searchButton.IsVisible = false;
+                onlineTournamentsLogScorePage.IsVisible = false;
             }
 		}
+
+
+        private void searchButton_Pressed(object sender, EventArgs e)
+        {
+            this.IsBusy = true;
+            loadingOverlay.IsVisible = true;
+        }
 
         private async void searchButton_ClickedAsync(object sender, EventArgs e)
         {
@@ -74,6 +88,8 @@ namespace XWTournament.Pages.Online
                 searchResultsListView.IsVisible = true;
             }
 
+            searchResultsLabel.IsVisible = true;
+
             this.IsBusy = false;
             loadingOverlay.IsVisible = false;
         }
@@ -89,5 +105,24 @@ namespace XWTournament.Pages.Online
             }
             //Navigation.PushAsync(new Players_AddEdit(Convert.ToInt32(sender.CommandParameter.ToString())));
         }
+
+        #endregion
+
+
+        #region "Log Scores"
+
+        private async void LoadOnlineActiveTournamentsAsync()
+        {
+            ////Search tournaments open to the public
+            ////Using POST for the sake of passing a tournament object info to search with
+            //IRestRequest request = new RestRequest("TournamentsSearch", Method.GET);
+            //request.AddUrlSegment("userid", App.CurrentUser.Id.ToString());
+
+            //// execute the request
+            //var response = await client.ExecuteTaskAsync(request);
+            //string content = response.Content;
+
+        }
+        #endregion
     }
 }

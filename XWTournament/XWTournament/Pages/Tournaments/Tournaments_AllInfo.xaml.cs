@@ -17,6 +17,7 @@ namespace XWTournament.Pages.Tournaments
     public partial class Tournaments_AllInfo : TabbedPage
     {
         private int intTournID;
+        public int intDefaultRoundLength = 0;
 
         private TournamentMain objTournMain = new TournamentMain();
         private ObservableCollection<PlayerToTournamentMainPlayer_ViewModel> lstViewPlayers = new ObservableCollection<PlayerToTournamentMainPlayer_ViewModel>();
@@ -45,6 +46,7 @@ namespace XWTournament.Pages.Tournaments
                 objTournMain = new TournamentMain();
                 objTournMain = conn.GetWithChildren<TournamentMain>(intTournID, true);
                 Title = objTournMain.Name;
+                intDefaultRoundLength = objTournMain.RoundTimeLength;
 
                 UpdatePlayerList(conn);
 

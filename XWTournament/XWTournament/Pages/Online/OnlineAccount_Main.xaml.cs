@@ -35,6 +35,12 @@ namespace XWTournament.Pages
 
         }
 
+        private void loginButton_Pressed(object sender, EventArgs e)
+        {
+            this.IsBusy = true;
+            loginFailEntry.IsVisible = false;
+        }
+
         private async void loginButton_ClickedAsync(object sender, EventArgs e)
         {
             this.IsBusy = true;
@@ -125,5 +131,6 @@ namespace XWTournament.Pages
             registerUser.IsVisible = true;
             registerUser.Source = "https://xwtweb.gear.host/Account/LoginRegister";
         }
+
     }
 }

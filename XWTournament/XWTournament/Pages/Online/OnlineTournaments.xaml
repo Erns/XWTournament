@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XWTournament.Pages.Online.OnlineTournaments"
+             Title="Tournaments (Online)">
+
+    <ContentPage x:Name="onlineTournamentsRegisterPage" Title="Register" >
+        
+        <ContentPage.Content>
+            <Grid>
+
+                <ListView x:Name="searchResultsListView" SelectionMode="None">
+                    <ListView.Header>
+                        <StackLayout Padding="25, 10, 25, 10">
+                            <Entry x:Name="nameEntry"
+                               Placeholder="Tournament Name"
+                               Keyboard="Text"/>
+
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Date"
+                                   VerticalOptions="CenterAndExpand"
+                                   HorizontalOptions="Start"/>  
+
+                                <DatePicker x:Name="dateEntry" VerticalOptions="CenterAndExpand" />
+                            </StackLayout>
+
+                            <Button x:Name="searchButton" Text="Search" Clicked="searchButton_ClickedAsync" Pressed="searchButton_Pressed" ></Button>
+
+                            <Label x:Name="searchResultsLabel" Text="Results" FontSize="Large" FontAttributes="Italic" IsVisible="False"></Label>
+
+                        </StackLayout>
+                    </ListView.Header>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell   Text="{Binding Name}"
+                                    Detail="{Binding StartDate}"
+                                    x:Name="{Binding Id}"
+                                    CommandParameter="{Binding Id}"
+                                    Tapped="searchTournamentItem_TappedAsync"
+                                    />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                
+                </ListView>
+                
+                <ContentView x:Name="loadingOverlay" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
+
+            </Grid>
+
+        </ContentPage.Content>
+    </ContentPage>
+
+    <ContentPage x:Name="onlineTournamentsLogScorePage" Title="Log Scores">
+        
+    </ContentPage>
+    
+</TabbedPage>
