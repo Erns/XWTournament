@@ -66,6 +66,7 @@ namespace XWTournament.Models
         public decimal SOS { get; set; }
 
         public int API_Id { get; set; } = 0;
+        public int API_UserAccountId { get; set; } = 0;
 
     }
 

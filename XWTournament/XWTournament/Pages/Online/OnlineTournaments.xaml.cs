@@ -10,6 +10,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XWTournament.Classes;
 using XWTournament.Models;
+using XWTournament.ViewModel;
 
 namespace XWTournament.Pages.Online
 {
@@ -17,6 +18,8 @@ namespace XWTournament.Pages.Online
 	public partial class OnlineTournaments : TabbedPage
 	{
         RestClient client = Utilities.InitializeRestClient();
+
+        private static List<TournamentMainRoundTable> associatedLogScoreTables = new List<TournamentMainRoundTable>();
 
         #region "Search Tournaments"
 
@@ -36,6 +39,7 @@ namespace XWTournament.Pages.Online
             {
                 searchButton.IsVisible = false;
                 onlineTournamentsLogScorePage.IsVisible = false;
+                associatedLogScoreTables = new List<TournamentMainRoundTable>();
             }
 		}
 
@@ -113,6 +117,8 @@ namespace XWTournament.Pages.Online
 
         private async void LoadOnlineActiveTournamentsAsync()
         {
+            logScoreLoadingOverlay.IsVisible = true;
+
             ////Search tournaments open to the public
             ////Using POST for the sake of passing a tournament object info to search with
             //IRestRequest request = new RestRequest("TournamentsSearch", Method.GET);
@@ -122,7 +128,95 @@ namespace XWTournament.Pages.Online
             //var response = await client.ExecuteTaskAsync(request);
             //string content = response.Content;
 
+            //List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
+            List<TournamentMain> returnedTournaments = new List<TournamentMain>();
+
+            associatedLogScoreTables = new List<TournamentMainRoundTable>();
+
+            //Go through the returned associated tournaments, grab the latest round's info and ensure the user is at one of the tables
+            foreach (TournamentMain tournament in returnedTournaments)
+            {
+                if (tournament.Rounds.Count > 0)
+                {
+                    TournamentMainRound lastestRound = tournament.Rounds[tournament.Rounds.Count - 1];
+
+                    int intTournPlayerId = 0;
+                    foreach (TournamentMainPlayer player in tournament.Players)
+                    {
+                        if (player.API_UserAccountId == App.CurrentUser.Id)
+                        {
+                            intTournPlayerId = player.PlayerId;
+                            break;
+                        }
+                    }
+
+                    if (intTournPlayerId > 0)
+                    {
+                        foreach (TournamentMainRoundTable table in lastestRound.Tables)
+                        {
+                            if (table.Player1Id == intTournPlayerId || table.Player2Id == intTournPlayerId)
+                            {
+                                table.TableName = string.Format("{0}: {1}", tournament.Name, table.TableName);
+                                associatedLogScoreTables.Add(table);
+                                break;
+                            }
+                        }
+                    }
+                }               
+            }
+
+            //Test data
+            for(int i = 1; i < 5; i++)
+            {
+                TournamentMainRoundTable tmpTable = new TournamentMainRoundTable()
+                {
+                    Id = i,
+                    RoundId = (i * 100),
+                    TableName = string.Format("{0}: {1}", "TournTest" + i, "TableTest" + i),
+                    Player1Name = "player 1 - " + i,
+                    Player2Name = "player 2 - " + i
+                };
+                associatedLogScoreTables.Add(tmpTable);
+            }
+
+
+            logScoreTableListView.ItemsSource = associatedLogScoreTables;
+
+            logScoreLoadingOverlay.IsVisible = false;
         }
+
         #endregion
+
+        private void logScoreTable_Tapped(TextCell sender, EventArgs e)
+        {
+            int intTableId = Convert.ToInt32(sender.CommandParameter.ToString());
+            if (intTableId > 0)
+            {
+                foreach (TournamentMainRoundTable table in associatedLogScoreTables)
+                {
+                    if (table.Id == intTableId)
+                    {
+                        logScoreWindowOverlayGrid.BindingContext = new TournamentMainRoundTable_ViewModel(table, false);
+                        logScoreWindowOverlay.IsVisible = true;
+                        break;
+                    }
+                }
+
+            }
+        }
+
+        //Hide timer popup when hitting the back button
+        protected override bool OnBackButtonPressed()
+        {
+            if (logScoreWindowOverlay.IsVisible)
+            {
+                logScoreWindowOverlay.IsVisible = false;
+                return true;    //Prevent back button from continuing
+            }
+            else
+            {
+                return base.OnBackButtonPressed();
+            }
+        }
     }
 }

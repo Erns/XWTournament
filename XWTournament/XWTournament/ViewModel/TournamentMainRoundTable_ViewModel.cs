@@ -209,7 +209,7 @@ namespace XWTournament.ViewModel
         //Update the SQL table after all the adjustments are made
         public void UpdateRoundTable()
         {
-            if (TournamentMainRoundTable.Id == 0 || _recursiveLvl > 1) return;
+            if (TournamentMainRoundTable.Id == 0 || _recursiveLvl > 1 || !_enabled) return;
 
             using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
             {
