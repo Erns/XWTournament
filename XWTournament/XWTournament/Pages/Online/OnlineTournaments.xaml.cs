@@ -72,19 +72,7 @@ namespace XWTournament.Pages.Online
             var response = await client.ExecuteTaskAsync(request);
             string content = response.Content;
 
-            //List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
-            List<TournamentMain> returnedTournaments = new List<TournamentMain>();
-
-            for (int i = 1; i < 15; i++){
-                TournamentMain tmpTournament = new TournamentMain()
-                {
-                    Id = i,
-                    Name = "Testing " + i,
-                    StartDate = DateTime.Now
-                };
-                returnedTournaments.Add(tmpTournament);
-            };
-
+            List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
 
             if (returnedTournaments.Count > 0)
             {
