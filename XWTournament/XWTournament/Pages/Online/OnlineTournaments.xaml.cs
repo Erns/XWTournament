@@ -88,18 +88,33 @@ namespace XWTournament.Pages.Online
 
         private async void searchTournamentItem_TappedAsync(TextCell sender, EventArgs e)
         {
-            var answer = await DisplayAlert("Register", "Would you like to register for tournament " + sender.Text + " Id " + sender.CommandParameter + "?", "Yes", "No");
+            var answer = await DisplayAlert("Register", "Would you like to register for tournament " + sender.Text + "?", "Yes", "No");
             if (answer)
             {
-                //Register register
-                await DisplayAlert("Confirmed", "Successfully registered for tournament!", "Sweet");
 
+                //Search tournaments open to the public
+                IRestRequest request = new RestRequest("TournamentsSearch/{userid}/{id}", Method.PUT);
+                request.AddUrlSegment("userid", App.CurrentUser.Id.ToString());
+                request.AddUrlSegment("id", sender.CommandParameter.ToString());
+                
+                // execute the request
+                var response = await client.ExecuteTaskAsync(request);
+                string content = response.Content;
+
+                if (content.ToUpper().Contains("SUCCESS"))
+                {
+                    LoadOnlineActiveTournamentsAsync();
+                    await DisplayAlert("Confirmed", "Successfully registered for tournament!", "Sweet");                    
+                }
+                else
+                {
+                    await DisplayAlert("Error", "There was an error in registering.  Please try again.", "OK");
+                }
             }
             //Navigation.PushAsync(new Players_AddEdit(Convert.ToInt32(sender.CommandParameter.ToString())));
         }
 
         #endregion
-
 
         #region "Log Scores"
 
@@ -107,14 +122,13 @@ namespace XWTournament.Pages.Online
         {
             logScoreLoadingOverlay.IsVisible = true;
 
-            ////Search tournaments open to the public
-            ////Using POST for the sake of passing a tournament object info to search with
-            //IRestRequest request = new RestRequest("TournamentsSearch", Method.GET);
-            //request.AddUrlSegment("userid", App.CurrentUser.Id.ToString());
+            //Pull tournaments user is registered for
+            IRestRequest request = new RestRequest("TournamentsSearch/{userid}", Method.GET);
+            request.AddUrlSegment("userid", App.CurrentUser.Id.ToString());
 
-            //// execute the request
-            //var response = await client.ExecuteTaskAsync(request);
-            //string content = response.Content;
+            // execute the request
+            var response = await client.ExecuteTaskAsync(request);
+            string content = response.Content;
 
             //List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
             List<TournamentMain> returnedTournaments = new List<TournamentMain>();
@@ -173,8 +187,6 @@ namespace XWTournament.Pages.Online
             logScoreLoadingOverlay.IsVisible = false;
         }
 
-        #endregion
-
         private void logScoreTable_Tapped(TextCell sender, EventArgs e)
         {
             int intTableId = Convert.ToInt32(sender.CommandParameter.ToString());
@@ -206,5 +218,8 @@ namespace XWTournament.Pages.Online
                 return base.OnBackButtonPressed();
             }
         }
+
+        #endregion
+
     }
 }
