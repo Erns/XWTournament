@@ -130,8 +130,7 @@ namespace XWTournament.Pages.Online
             var response = await client.ExecuteTaskAsync(request);
             string content = response.Content;
 
-            //List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
-            List<TournamentMain> returnedTournaments = new List<TournamentMain>();
+            List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
 
             associatedLogScoreTables = new List<TournamentMainRoundTable>();
 
@@ -167,19 +166,19 @@ namespace XWTournament.Pages.Online
                 }               
             }
 
-            //Test data
-            for(int i = 1; i < 5; i++)
-            {
-                TournamentMainRoundTable tmpTable = new TournamentMainRoundTable()
-                {
-                    Id = i,
-                    RoundId = (i * 100),
-                    TableName = string.Format("{0}: {1}", "TournTest" + i, "TableTest" + i),
-                    Player1Name = "player 1 - " + i,
-                    Player2Name = "player 2 - " + i
-                };
-                associatedLogScoreTables.Add(tmpTable);
-            }
+            ////Test data
+            //for(int i = 1; i < 5; i++)
+            //{
+            //    TournamentMainRoundTable tmpTable = new TournamentMainRoundTable()
+            //    {
+            //        Id = i,
+            //        RoundId = (i * 100),
+            //        TableName = string.Format("{0}: {1}", "TournTest" + i, "TableTest" + i),
+            //        Player1Name = "player 1 - " + i,
+            //        Player2Name = "player 2 - " + i
+            //    };
+            //    associatedLogScoreTables.Add(tmpTable);
+            //}
 
 
             logScoreTableListView.ItemsSource = associatedLogScoreTables;
