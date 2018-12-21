@@ -25,31 +25,42 @@ namespace XWTournament.Pages.Tournaments
 
             using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(App.DB_PATH))
             {
-                objTournMain = new TournamentMain();
-                objTournMain = conn.GetWithChildren<TournamentMain>(intTournamentId, true);
-                Title += objTournMain.Name;
-
-                Utilities.CalculatePlayerScores(ref objTournMain);
-
-                List<TournamentMainPlayer> lstPlayerStandings = new List<TournamentMainPlayer>();
-                foreach (TournamentMainPlayer player in objTournMain.Players.OrderBy(obj => obj.Rank).ToList())
-                {
-                    //Separating out as to not tempt fate and inadvertently change any data unintentionally
-                    TournamentMainPlayer tmpPlayer = new TournamentMainPlayer();
-                    tmpPlayer.Rank = player.Rank;
-                    tmpPlayer.PlayerName = player.PlayerName;
-                    tmpPlayer.Score = player.Score;
-                    tmpPlayer.MOV = player.MOV;
-                    tmpPlayer.SOS = player.SOS;
-
-                    if (!player.Active) tmpPlayer.PlayerName += " (D)";
-
-                    lstPlayerStandings.Add(tmpPlayer);
-                }
-
-                tournamentStandingsListView.ItemsSource = lstPlayerStandings;
-
+                SetStandings(conn.GetWithChildren<TournamentMain>(intTournamentId, true));
             }
         }
-	}
+
+        public Tournaments_Standings(TournamentMain tourn)
+        {
+            InitializeComponent();
+            Title = "Current Standings - ";
+            SetStandings(tourn);
+        }
+
+        private void SetStandings(TournamentMain tourn)
+        {
+            objTournMain = new TournamentMain();
+            objTournMain = tourn;
+            Title += objTournMain.Name;
+
+            Utilities.CalculatePlayerScores(ref objTournMain);
+
+            List<TournamentMainPlayer> lstPlayerStandings = new List<TournamentMainPlayer>();
+            foreach (TournamentMainPlayer player in objTournMain.Players.OrderBy(obj => obj.Rank).ToList())
+            {
+                //Separating out as to not tempt fate and inadvertently change any data unintentionally
+                TournamentMainPlayer tmpPlayer = new TournamentMainPlayer();
+                tmpPlayer.Rank = player.Rank;
+                tmpPlayer.PlayerName = player.PlayerName;
+                tmpPlayer.Score = player.Score;
+                tmpPlayer.MOV = player.MOV;
+                tmpPlayer.SOS = player.SOS;
+
+                if (!player.Active) tmpPlayer.PlayerName += " (D)";
+
+                lstPlayerStandings.Add(tmpPlayer);
+            }
+
+            tournamentStandingsListView.ItemsSource = lstPlayerStandings;
+        }
+    }
 }

@@ -10,6 +10,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XWTournament.Classes;
 using XWTournament.Models;
+using XWTournament.Pages.Tournaments;
 using XWTournament.ViewModel;
 
 namespace XWTournament.Pages.Online
@@ -20,6 +21,7 @@ namespace XWTournament.Pages.Online
         RestClient client = Utilities.InitializeRestClient();
 
         private static List<TournamentMainRoundTable> associatedLogScoreTables = new List<TournamentMainRoundTable>();
+        private static List<TournamentMain> associatedTournaments = new List<TournamentMain>();
 
         #region "Search Tournaments"
 
@@ -40,6 +42,7 @@ namespace XWTournament.Pages.Online
                 searchButton.IsVisible = false;
                 onlineTournamentsLogScorePage.IsVisible = false;
                 associatedLogScoreTables = new List<TournamentMainRoundTable>();
+                associatedTournaments = new List<TournamentMain>();
             }
 		}
 
@@ -47,13 +50,13 @@ namespace XWTournament.Pages.Online
         private void searchButton_Pressed(object sender, EventArgs e)
         {
             this.IsBusy = true;
-            loadingOverlay.IsVisible = true;
+            loadingOverlay_Search.IsVisible = true;
         }
 
         private async void searchButton_ClickedAsync(object sender, EventArgs e)
         {
             this.IsBusy = true;
-            loadingOverlay.IsVisible = true;
+            loadingOverlay_Search.IsVisible = true;
 
             TournamentMain tournament = new TournamentMain()
             {
@@ -83,7 +86,7 @@ namespace XWTournament.Pages.Online
             searchResultsLabel.IsVisible = true;
 
             this.IsBusy = false;
-            loadingOverlay.IsVisible = false;
+            loadingOverlay_Search.IsVisible = false;
         }
 
         private async void searchTournamentItem_TappedAsync(TextCell sender, EventArgs e)
@@ -118,9 +121,11 @@ namespace XWTournament.Pages.Online
 
         #region "Log Scores"
 
+
         private async void LoadOnlineActiveTournamentsAsync()
         {
-            logScoreLoadingOverlay.IsVisible = true;
+            loadingOverlay_LogScore.IsVisible = true;
+            loadingOverlay_Standings.IsVisible = true;
 
             //Pull tournaments user is registered for
             IRestRequest request = new RestRequest("TournamentsSearch/{userid}", Method.GET);
@@ -131,6 +136,13 @@ namespace XWTournament.Pages.Online
             string content = response.Content;
 
             List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(content).ToString());
+
+            associatedTournaments = new List<TournamentMain>();
+            if (returnedTournaments.Count > 0)
+            {
+                tournamentStandingsTableListView.ItemsSource = returnedTournaments;
+                associatedTournaments.AddRange(returnedTournaments);
+            }                 
 
             associatedLogScoreTables = new List<TournamentMainRoundTable>();
 
@@ -170,7 +182,8 @@ namespace XWTournament.Pages.Online
 
             logScoreTableListView.ItemsSource = associatedLogScoreTables;
 
-            logScoreLoadingOverlay.IsVisible = false;
+            loadingOverlay_LogScore.IsVisible = false;
+            loadingOverlay_Standings.IsVisible = false;
         }
 
         private void logScoreTable_Tapped(TextCell sender, EventArgs e)
@@ -212,25 +225,120 @@ namespace XWTournament.Pages.Online
             LoadOnlineActiveTournamentsAsync();
         }
 
-        private void saveLogScoreButton_Clicked(Button sender, EventArgs e)
+        private async void saveLogScoreButton_ClickedAsync(Button sender, EventArgs e)
         {
+            loadingOverlay_LogScore.IsVisible = true;
+            loadingOverlay_Standings.IsVisible = true;
+
             int intTableId = Convert.ToInt32(sender.CommandParameter.ToString());
             if (intTableId > 0)
             {
+
                 foreach (TournamentMainRoundTable table in associatedLogScoreTables)
                 {
                     if (table.Id == intTableId)
                     {
-                        //logScoreWindowOverlayGrid.BindingContext = new TournamentMainRoundTable_ViewModel(table, false);
-                        //logScoreWindowOverlay.IsVisible = true;
+
+                        bool blnProceed = false;
+
+                        //Pull tournaments user is registered for
+                        //Verify user is still registered to the tournament, round in question is still the current round, and the table is still live
+                        IRestRequest requestVerify = new RestRequest("TournamentsSearch/{userid}", Method.GET);
+                        requestVerify.AddUrlSegment("userid", App.CurrentUser.Id.ToString());
+
+                        // execute the request
+                        var responseVerify = await client.ExecuteTaskAsync(requestVerify);
+                        string contentVerify = responseVerify.Content;
+
+                        List<TournamentMain> returnedTournaments = JsonConvert.DeserializeObject<List<TournamentMain>>(JsonConvert.DeserializeObject(contentVerify).ToString());
+
+                        foreach (TournamentMain tournVerify in returnedTournaments)
+                        {
+                            foreach(TournamentMainRound roundVerify in tournVerify.Rounds)
+                            {
+                                if (roundVerify.Id == table.RoundId)
+                                {
+                                    //If the table's round is NOT currently the most recent round, prevent saving
+                                    if (roundVerify.Id == tournVerify.Rounds[tournVerify.Rounds.Count - 1].Id)
+                                    {
+                                        //Verify the same players are on the table
+                                        foreach (TournamentMainRoundTable tableVerify in roundVerify.Tables)
+                                        {
+                                            if (tableVerify.Id == intTableId)
+                                            {
+                                                if (tableVerify.Player1Id == table.Player1Id && tableVerify.Player2Id == table.Player2Id)
+                                                {
+                                                    blnProceed = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+
+
+                        if (!blnProceed)
+                        {
+                            logScoreWindowOverlay.IsVisible = false;
+                            await DisplayAlert("Warning!", "Unable to log scores for this table!", "Reload");
+                            LoadOnlineActiveTournamentsAsync();
+                            break;
+                        }
+
+                        //Update database
+                        var request = new RestRequest("TournamentsRounds/{userid}/{id}", Method.PUT);
+                        request.AddUrlSegment("userid", App.CurrentUser.Id);
+                        request.AddUrlSegment("id", table.RoundId);
+                        table.Player1Name = "";
+                        table.Player2Name = "";
+                        table.Bye = !table.Bye;
+                        request.AddJsonBody(JsonConvert.SerializeObject(table));
+
+                        // execute the request
+                        var response = await client.ExecuteTaskAsync(request);
+                        var content = response.Content; // raw content as string
+
+                        if (content.ToUpper().Contains("PUT: SUCCESS"))
+                        {
+                            await DisplayAlert("Updated", "Table scores logged!", "OK");
+                        }
+                        else
+                        {
+                            await DisplayAlert("Alert", "Table scores were not logged.", "OK");
+                        }
+
+                        logScoreWindowOverlay.IsVisible = false;
+                        LoadOnlineActiveTournamentsAsync();
+
                         break;
                     }
                 }
 
             }
+
+            loadingOverlay_LogScore.IsVisible = false;
+            loadingOverlay_Standings.IsVisible = false;
         }
+
         #endregion
 
-
+        private void tournamentStandings_Tapped(TextCell sender, EventArgs e)
+        {
+            int intTournamentId = Convert.ToInt32(sender.CommandParameter.ToString());
+            if (intTournamentId > 0)
+            {
+                foreach (TournamentMain tourn in associatedTournaments)
+                {
+                    if (tourn.Id == intTournamentId)
+                    {
+                        Navigation.PushAsync(new Tournaments_Standings(tourn));
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

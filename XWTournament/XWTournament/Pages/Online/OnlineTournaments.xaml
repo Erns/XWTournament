@@ -34,7 +34,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextCell   Text="{Binding Name}"
-                                    Detail="{Binding StartDate}"
+                                    Detail="{Binding StartDate, StringFormat='{0:MMMM dd, yyyy}'}"
                                     x:Name="{Binding Id}"
                                     CommandParameter="{Binding Id}"
                                     Tapped="searchTournamentItem_TappedAsync"
@@ -44,7 +44,7 @@
                 
                 </ListView>
                 
-                <ContentView x:Name="loadingOverlay" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
+                <ContentView x:Name="loadingOverlay_Search" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
 
             </Grid>
 
@@ -102,17 +102,38 @@
                         </Grid>
 
                         <Button x:Name="cancelLogScoreButton" Text="Cancel" Clicked="cancelLogScoreButton_Clicked"></Button>
-                        <Button x:Name="saveLogScoreButton" Text="Save" Clicked="saveLogScoreButton_Clicked"></Button>
+                        <Button x:Name="saveLogScoreButton" Text="Save" Clicked="saveLogScoreButton_ClickedAsync"></Button>
 
                     </StackLayout>
 
                 </AbsoluteLayout>
 
-                <ContentView x:Name="logScoreLoadingOverlay"  ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
+                <ContentView x:Name="loadingOverlay_LogScore"  ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
 
             </Grid>
         </ContentPage.Content>
 
+    </ContentPage>
+
+    <ContentPage x:Name="onlineTournamentsStandings" Title="Standings">
+        <ContentPage.Content>
+            <Grid>
+
+                <ListView x:Name="tournamentStandingsTableListView" SelectionMode="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell Text="{Binding Name}"
+                                      Detail="{Binding StartDate, StringFormat='{0:MMMM dd, yyyy}'}"
+                                      CommandParameter="{Binding Id}"
+                                      Tapped="tournamentStandings_Tapped"></TextCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <ContentView x:Name="loadingOverlay_Standings" ControlTemplate="{StaticResource loadingOverlayTemplate}" IsVisible="{Binding IsBusy}"></ContentView>
+
+            </Grid>
+        </ContentPage.Content>
     </ContentPage>
     
 </TabbedPage>
