@@ -60,6 +60,7 @@
                         <DataTemplate>
                             <TextCell Text="{Binding TableName}"
                                       CommandParameter="{Binding Id}"
+                                      IsEnabled="{Binding Bye}"
                                       Tapped="logScoreTable_Tapped"></TextCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -100,8 +101,8 @@
 
                         </Grid>
 
-                        <Button x:Name="cancelLogScoreButton" Text="Cancel"></Button>
-                        <Button x:Name="saveLogScoreButton" Text="Save"></Button>
+                        <Button x:Name="cancelLogScoreButton" Text="Cancel" Clicked="cancelLogScoreButton_Clicked"></Button>
+                        <Button x:Name="saveLogScoreButton" Text="Save" Clicked="saveLogScoreButton_Clicked"></Button>
 
                     </StackLayout>
 

@@ -158,6 +158,8 @@ namespace XWTournament.Pages.Online
                             if (table.Player1Id == intTournPlayerId || table.Player2Id == intTournPlayerId)
                             {
                                 table.TableName = string.Format("{0}: {1}", tournament.Name, table.TableName);
+                                if (table.Bye) table.TableName += " (BYE)";
+                                table.Bye = !table.Bye; //Flip this since the Binding can't do that
                                 associatedLogScoreTables.Add(table);
                                 break;
                             }
@@ -165,21 +167,6 @@ namespace XWTournament.Pages.Online
                     }
                 }               
             }
-
-            ////Test data
-            //for(int i = 1; i < 5; i++)
-            //{
-            //    TournamentMainRoundTable tmpTable = new TournamentMainRoundTable()
-            //    {
-            //        Id = i,
-            //        RoundId = (i * 100),
-            //        TableName = string.Format("{0}: {1}", "TournTest" + i, "TableTest" + i),
-            //        Player1Name = "player 1 - " + i,
-            //        Player2Name = "player 2 - " + i
-            //    };
-            //    associatedLogScoreTables.Add(tmpTable);
-            //}
-
 
             logScoreTableListView.ItemsSource = associatedLogScoreTables;
 
@@ -196,6 +183,7 @@ namespace XWTournament.Pages.Online
                     if (table.Id == intTableId)
                     {
                         logScoreWindowOverlayGrid.BindingContext = new TournamentMainRoundTable_ViewModel(table, false);
+                        saveLogScoreButton.CommandParameter = table.Id;
                         logScoreWindowOverlay.IsVisible = true;
                         break;
                     }
@@ -218,7 +206,31 @@ namespace XWTournament.Pages.Online
             }
         }
 
+        private void cancelLogScoreButton_Clicked(object sender, EventArgs e)
+        {
+            logScoreWindowOverlay.IsVisible = false;
+            LoadOnlineActiveTournamentsAsync();
+        }
+
+        private void saveLogScoreButton_Clicked(Button sender, EventArgs e)
+        {
+            int intTableId = Convert.ToInt32(sender.CommandParameter.ToString());
+            if (intTableId > 0)
+            {
+                foreach (TournamentMainRoundTable table in associatedLogScoreTables)
+                {
+                    if (table.Id == intTableId)
+                    {
+                        //logScoreWindowOverlayGrid.BindingContext = new TournamentMainRoundTable_ViewModel(table, false);
+                        //logScoreWindowOverlay.IsVisible = true;
+                        break;
+                    }
+                }
+
+            }
+        }
         #endregion
+
 
     }
 }
